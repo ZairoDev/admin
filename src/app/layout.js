@@ -18,28 +18,28 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import LayoutProvider from "@/providers/LayoutProvider";
-import QueryProvider from "@/components/reactQueryClientProvider";
+import { ReactQueryClientProvider } from "@/components/reactQueryClientProvider";
 
 export const metadata = {
   title: "Admash - Material Design React Nextjs Admin Dashboard Template",
   description: "Material Design React Nextjs Admin Dashboard Templat",
 };
 
+
+
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body>
-        <QueryProvider>
+    <ReactQueryClientProvider>
+      <html lang="en">
+        <body>
           <AppRouterCacheProvider options={{ enableCssLayer: true }}>
             <ThemeProvider theme={theme}>
-              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
               <CssBaseline />
-
               <LayoutProvider>{children}</LayoutProvider>
             </ThemeProvider>
           </AppRouterCacheProvider>
-        </QueryProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ReactQueryClientProvider>
   );
 }
