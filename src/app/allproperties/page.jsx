@@ -6,14 +6,11 @@ import PaginationComponent from "@/components/Pagination/pagination";
 import Loader from "@/components/Loader/Loader";
 import ProprtyCard from "@/components/Card/Card";
 
-
 const fetchProperties = async (page = 1, limit = 20) => {
   const response = await axios.get(
     `/api/allproperties?page=${page}&limit=${limit}`
   );
   console.log(response.data);
-  
-
   return response.data;
 };
 
