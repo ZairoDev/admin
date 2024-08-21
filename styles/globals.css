@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --bodyTextColor: #5B5B98;
   --primaryColor: #757FEF;
@@ -1172,3 +1176,5 @@ img {
   top: 0px;
   margin-left: 3px;
 }/*# sourceMappingURL=globals.css.map */
+
+
