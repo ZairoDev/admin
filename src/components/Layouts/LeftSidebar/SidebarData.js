@@ -31,6 +31,10 @@ export const SidebarData = [
         path: "/users",
       },
       {
+        title: "Properties",
+        path: "/allproperties",
+      },
+      {
         title: "eCommerce",
         path: "/ecommerce-dashboard/",
       },

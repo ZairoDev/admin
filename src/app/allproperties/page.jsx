@@ -10,7 +10,6 @@ const fetchProperties = async (page = 1, limit = 20) => {
   const response = await axios.get(
     `/api/allproperties?page=${page}&limit=${limit}`
   );
-  console.log(response.data);
   return response.data;
 };
 
@@ -19,6 +18,7 @@ const AllPropertiesPage = () => {
   const { data, error, isLoading, isSuccess } = useQuery({
     queryKey: ["allProperties", currentPage],
     queryFn: () => fetchProperties(currentPage),
+    staleTime: 1000 * 60 * 5,
   });
 
   if (isSuccess) {

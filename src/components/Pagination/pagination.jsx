@@ -17,6 +17,7 @@ const PaginationComponent = ({ currentPage, totalPages, onPageChange }) => {
         onChange={handleChange}
         variant="outlined"
         shape="rounded"
+        color="primary"
       />
     </Stack>
 
