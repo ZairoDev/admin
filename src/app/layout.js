@@ -22,8 +22,8 @@ import { ReactQueryClientProvider } from "@/components/reactQueryClientProvider"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export const metadata = {
-  title: "Admash - Material Design React Nextjs Admin Dashboard Template",
-  description: "Material Design React Nextjs Admin Dashboard Templat",
+  title: "VacationSaga admin dashboard",
+  description: "This is the admin dashboard only access by company login.",
 };
 
 export default function RootLayout({ children }) {
