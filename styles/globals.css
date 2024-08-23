@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
   --bodyTextColor: #5B5B98;
   --primaryColor: #757FEF;
@@ -24,7 +23,7 @@ html, body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-color: var(--headingColor);
+  color: var(--headingColor);
 }
 
 img {

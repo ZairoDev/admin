@@ -23,6 +23,7 @@ export default function Home() {
         dashboardUrl="/"
         dashboardText="Dashboard" 
       />
+
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 2 }}>
         <Grid item xs={12} md={12} lg={12} xl={8}>
           {/* Features */}

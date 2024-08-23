@@ -27,8 +27,12 @@ export const SidebarData = [
 
     subNav: [
       {
-        title: "All Property",
-        path: "/allproperties",
+        title: "Users",
+        path: "/users"
+      },
+      {
+        title: "Properties",
+        path: "/allproperties"
       },
       {
         title: "eCommerce",
