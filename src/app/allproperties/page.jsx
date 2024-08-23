@@ -118,6 +118,7 @@ const AllPropertiesPage = () => {
               VSID={property.VSID}
               coverImage={property.propertyCoverFileUrl}
               placeName={property.placeName}
+              id={property._id}
             />
           ))}
         </div>
