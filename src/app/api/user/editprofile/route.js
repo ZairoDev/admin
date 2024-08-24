@@ -4,8 +4,10 @@ import { NextResponse } from "next/server";
 
 connectDb();
 
-export async function PUT(request) {
+export async function POST(request) {
   const { _id, ...body } = await request.json();
+
+  console.log('inside api: ', _id, body);
 
   if (!_id) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });
