@@ -31,6 +31,7 @@ const Footer = () => {
           </Typography>
         </Box>
       </Stack> */}
+      <></>
     </>
   );
 };

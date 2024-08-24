@@ -15,6 +15,7 @@ const SidebarNav = styled("nav")(({ theme }) => ({
   padding: "30px 10px",
   height: "100vh",
   display: "flex",
+  item:"center",
   justifyContent: "center",
   position: "fixed",
   top: 0,
@@ -32,7 +33,7 @@ const Sidebar = ({ toogleActive }) => {
   return (
     <>
       <div className="leftSidebarDark">
-        <SidebarNav className="LeftSidebarNav">
+        <SidebarNav className="LeftSidebarNav ">
           <SidebarWrap>
             <Box
               sx={{

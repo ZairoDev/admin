@@ -1,72 +1,93 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import Input from "@mui/material/Input";
+import { IoSearchOutline } from "react-icons/io5";
 import { useQuery } from "@tanstack/react-query";
 import PaginationComponent from "@/components/Pagination/pagination";
 import Loader from "@/components/Loader/Loader";
 import ProprtyCard from "@/components/Card/Card";
-
+import { useRouter } from "next/navigation";
+import debounce from "lodash.debounce";
 const fetchProperties = async (
-  page = 1,
+  currentPage,
   limit = 20,
   searchTerm = "",
   searchType = "VSID"
 ) => {
   const response = await axios.get(
-    `/api/allproperties?page=${page}&limit=${limit}&searchTerm=${searchTerm}&searchType=${searchType}`
+    `/api/allproperties?page=${currentPage}&limit=${limit}&searchTerm=${searchTerm}&searchType=${searchType}`
   );
   return response.data;
 };
 
-const debounce = (func, delay) => {
-  let timeoutId;
-  return (...args) => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => func(...args), delay);
-  };
-};
 const AllPropertiesPage = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchType, setSearchType] = useState("VSID");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const router = useRouter();
 
-  const { data, error, isLoading , isPending , isError  } = useQuery({
-    queryKey: ["allProperties", currentPage, debouncedSearchTerm,  searchType],
-    queryFn: () =>
-      fetchProperties(currentPage, 20, debouncedSearchTerm, searchType),
-    staleTime: 1000 * 60 * 5,
-  });
-  const debouncedSearch = useCallback(
-    debounce((value) => {
-      setDebouncedSearchTerm(value);
-    }, 3000),
-    []
-  );
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    debouncedSearch(searchTerm);
-  }, [searchTerm, debouncedSearch]);
+    const savedPage = localStorage.getItem("page");
+    if (savedPage) {
+      setCurrentPage(parseInt(savedPage));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("page", currentPage.toString());
+  }, [currentPage]);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchType, setSearchType] = useState("VSID");
+
+  router.push(
+    `/allproperties?page=${currentPage}&limit=20&searchTerm=${searchTerm}&searchType=${searchType}`
+  );
+
+  const { data, error, isLoading, isPending, isError, isSuccess } = useQuery({
+    queryKey: ["allProperties", currentPage, searchTerm, searchType],
+    queryFn: () => fetchProperties(currentPage, 20, searchTerm, searchType),
+    staleTime: 1000 * 60 * 5,
+  });
+
+  useEffect(() => {
+    if (window.localStorage != undefined) {
+      window.localStorage.setItem("page", currentPage);
+    }
+  });
 
   const handleSearch = (e) => {
     e.preventDefault();
-    setCurrentPage(1);
-    setDebouncedSearchTerm(searchTerm);
+    setCurrentPage(currentPage);
+    router.push(
+      `/allproperties?page=${currentPage}&limit=20&searchTerm=${
+        searchTerm || ""
+      }&searchType=${searchType}`,
+      undefined,
+      {
+        shallow: true,
+      }
+    );
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = debounce((e) => {
     setSearchTerm(e.target.value);
-  };
+  }, 3000);
 
   const handleSearchTypeChange = (e) => {
     setSearchType(e.target.value);
   };
-
   const handlePageChange = (number) => {
     setCurrentPage(number);
+    router.push(
+      `/allproperties?page=${currentPage}&limit=20&searchTerm=${
+        searchTerm || ""
+      }&searchType=${searchType}`,
+      undefined,
+      {
+        shallow: true,
+      }
+    );
   };
-
   if (isLoading)
     return (
       <div>
@@ -74,39 +95,52 @@ const AllPropertiesPage = () => {
       </div>
     );
   if (error) return `Error fetching properties: ${error.message}`;
-
   return (
     <div className="">
       <div className="flex sm:flex-row flex-col sm:items-center justify-between">
         <h1 className="font-bold mb-4 sm:text-3xl text-sm">All Properties</h1>
         <div className="flex items-center justify-between sm:justify-normal">
-          <form onSubmit={handleSearch} className="mb-4">
+          <form
+            onSubmit={handleSearch}
+            className="mb-4 flex items-center gap-x-2"
+          >
             <select
               value={searchType}
               onChange={handleSearchTypeChange}
-              className="border border-gray-300 px-4 py-2 mr-2">
+              className="block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+            >
               <option value="VSID">VSID</option>
               <option value="email">Email</option>
               <option value="phone">Phone</option>
             </select>
-            <Input
-              type="text"
-              placeholder={`Search by ${searchType}`}
-              value={searchTerm}
-              onChange={handleInputChange}
-              className="border border-gray-300 px-4 py-2"
-            />
+            <div className="relative flex items-center justify-center">
+              <input
+                className="outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                placeholder={`Search by ${searchType}`}
+                onChange={handleInputChange}
+              />
+              <IoSearchOutline className="absolute right-6" />
+            </div>
+
             <button
-              className="bg-PrimaryColor px-4 text-[#ffffff] py-2"
+              className="items-center sm:flex hidden text-white dark:text-white justify-center px-6 py-3 darkbg-white bg-PrimaryColor rounded-2xl"
               type="submit"
-              variant="outlined">
+              variant="outlined"
+            >
               Search
+            </button>
+            <button
+              className="flex sm:hidden items-center text-white dark:text-white justify-center px-6 py-3 darkbg-white bg-PrimaryColor rounded-2xl"
+              type="submit"
+              variant="outlined"
+            >
+              <IoSearchOutline />
             </button>
           </form>
         </div>
       </div>
       {data && data.data.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-items-center">
           {data.data.map((property) => (
             <ProprtyCard
               key={property._id}
@@ -118,6 +152,7 @@ const AllPropertiesPage = () => {
               VSID={property.VSID}
               coverImage={property.propertyCoverFileUrl}
               placeName={property.placeName}
+              id={property._id}
             />
           ))}
         </div>
@@ -129,8 +164,8 @@ const AllPropertiesPage = () => {
       {data && data.data.length > 0 && (
         <div className="flex items-center mt-4 mb-4 justify-center">
           <PaginationComponent
-            currentPage={data.page}
-            totalPages={data.totalPages}
+            currentPage={data.page || 1}
+            totalPages={data.totalPages || 1}
             onPageChange={handlePageChange}
           />
         </div>
