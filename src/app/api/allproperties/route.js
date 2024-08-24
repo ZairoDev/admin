@@ -4,7 +4,6 @@ import { Property } from "@/models/listing";
 
 connectDb();
 
-
 export async function GET(request) {
   try {
     const page = Number(request.nextUrl.searchParams.get("page")) || 1;
@@ -13,25 +12,25 @@ export async function GET(request) {
     const searchTerm = request.nextUrl.searchParams.get("searchTerm");
     const searchType = request.nextUrl.searchParams.get("searchType") || "VSID";
 
+    const regex = new RegExp(searchTerm, "i");
     let query = {};
 
     if (searchTerm) {
-      switch (searchType) {
-        case "VSID":
-          query.VSID = searchTerm;
-          break;
-        case "email":
-          query.email = searchTerm;
-          break;
-        case "phone":
-          query.phone = searchTerm;
-          break;
-        default:
-          query.VSID = searchTerm;
-      }
+      query[searchType] = regex;
     }
-    // console.log(searchTerm);
-    const allProperties = await Property.find(query).skip(skip).limit(limit);
+
+    let allProperties;
+
+    if (!searchTerm) {
+      allProperties = await Property.find().skip(skip).limit(limit);
+    } else {
+      allProperties = await Property.find(query);
+    }
+
+    if (allProperties.length === 0) {
+      const totalCount = await Property.countDocuments();
+      console.log("Total properties in database:", totalCount);
+    }
     const totalProperties = await Property.countDocuments(query);
     const totalPages = Math.ceil(totalProperties / limit);
 
@@ -42,9 +41,11 @@ export async function GET(request) {
       totalProperties,
     });
   } catch (error) {
+    console.error("Error in GET request:", error);
     return NextResponse.json(
       {
         message: "Failed to fetch properties from the database",
+        error: error.message,
       },
       { status: 500 }
     );

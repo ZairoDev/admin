@@ -1,22 +1,22 @@
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { MdArrowDropDown, MdArrowRight } from "react-icons/md";
 import toast, { Toaster } from "react-hot-toast";
-import { Input } from "@mui/base";
+
 
 const EditPropertyPage = ({ params }) => {
   const router = useRouter();
   const [property, setProperty] = useState(null);
   const [numberOfPortions, setNumberOfPortions] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const fetchProperty = async () => {
     try {
       const response = await axios.post("/api/getproperty", {
         id: params.id,
       });
-      console.log(response.data);
       setProperty(response.data);
       setNumberOfPortions(response.data.numberOfPortions);
     } catch (error) {
@@ -25,7 +25,6 @@ const EditPropertyPage = ({ params }) => {
       console.log("Property fetched successfully");
     }
   };
-
 
   const [formData, setFormData] = useState({
     VSID: property?.VSID,
@@ -130,7 +129,6 @@ const EditPropertyPage = ({ params }) => {
     fetchProperty();
   }, []);
 
- 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     const trimmedValue = value.trim();
@@ -143,17 +141,19 @@ const EditPropertyPage = ({ params }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       await axios.post("/api/editproperties", {
         propertyId: params.id,
         updatedData: formData,
       });
-
       toast.success("Property updated successfully");
-      setTimeout(() => {
-        router.push("/author");
-      }, 2000);
+      setLoading(false);
+      // setTimeout(() => {
+      //   router.push("/allproperties");
+      // }, 2000);
     } catch (error) {
       console.error("Error updating property:", error);
+      setLoading(false);
     }
   };
 
@@ -163,7 +163,7 @@ const EditPropertyPage = ({ params }) => {
 
   return (
     <div className="max-w-5xl mx-auto p-2 ">
-        <h1 className="text-3xl ml-1 text-white">Edit Property</h1>
+      <h1 className="text-3xl ml-1 ">Edit Property</h1>
       <Toaster />
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-x-2 gap-y-4 mt-4">
@@ -308,7 +308,6 @@ const EditPropertyPage = ({ params }) => {
               </select>
             </div>
           </div>
-
           <div className=" flex items-center sm:flex-row flex-col gap-y-2 sm:gap-y-0 gap-x-4">
             <label className=" w-full text-base ">
               Place Name
@@ -735,12 +734,15 @@ const EditPropertyPage = ({ params }) => {
             );
           })}
         </div>
-        <div className="ml-1 mt-4">
+        <div className=" m-4 flex items-center  justify-center">
           <button
             type="submit"
-            className=" text-base bg-DangerColor text-white px-6 py-2 rounded-2xl"
+            className={`flex items-center justify-center w-1/2 py-2 px-6 bg-PrimaryColor text-white rounded-2xl ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={loading}
           >
-            Save Changes
+            {loading ? "Updating..." : "Save Changes"}
           </button>
         </div>
       </form>
