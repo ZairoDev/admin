@@ -6,23 +6,29 @@ import { Toaster, toast } from "sonner";
 import Link from "next/link";
 import axios from "axios";
 import countryCodesList from "country-codes-list";
+import { FaCloudUploadAlt } from "react-icons/fa";
+import { LuImagePlus } from "react-icons/lu";
 
-const PageSignUp= () => {
+const PageSignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("Owner"); // Default role
   const [loading, setLoading] = useState(false);
-  const [emailSent, setEmailSent] = useState(false)
+  const [emailSent, setEmailSent] = useState(false);
   const [sendDetails, setSendDetails] = useState(false);
   const [countryCode, setCountryCode] = useState("+1");
   const [phoneNumber, setPhoneNumber] = useState("");
 
   const [nationality, setNationality] = useState("");
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState("Male");
   const [spokenLanguage, setSpokenLanguage] = useState("");
   const [bankDetails, setBankDetails] = useState("");
   const [address, setAddress] = useState("");
+
+  const [profilePic, setProfilePic] = useState("");
+  const [profilePicLoading, setProfilePicLoading] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
 
   const countryCodes = countryCodesList.customList(
     "countryCallingCode",
@@ -38,8 +44,7 @@ const PageSignUp= () => {
       password += characters.charAt(randomIndex);
     }
     return password;
-  }
-
+  };
 
   const validateForm = () => {
     if (!name) {
@@ -67,6 +72,20 @@ const PageSignUp= () => {
     try {
       setLoading(true);
       const fullPhoneNumber = `${countryCode} ${phoneNumber}`;
+      console.log(
+        name,
+        email,
+        password,
+        role,
+        sendDetails,
+        fullPhoneNumber,
+        gender,
+        nationality,
+        spokenLanguage,
+        bankDetails,
+        address,
+        profilePic
+      );
       const response = await axios.post("/api/user/signup", {
         name,
         email,
@@ -74,6 +93,12 @@ const PageSignUp= () => {
         role,
         sendDetails,
         phone: fullPhoneNumber,
+        gender,
+        nationality,
+        spokenLanguage,
+        bankDetails,
+        address,
+        profilePic,
       });
       console.log("Signup successful:", response.data);
       toast.success(
@@ -87,6 +112,11 @@ const PageSignUp= () => {
       setSendDetails(false);
       setCountryCode("+1");
       setPhoneNumber("");
+      setAddress("");
+      setBankDetails("");
+      setSpokenLanguage("");
+      setGender("");
+      setProfilePic('')
       // router.push("/login")
     } catch (error) {
       console.error("Signup failed:", error);
@@ -95,16 +125,106 @@ const PageSignUp= () => {
       setLoading(false);
     }
   };
+
+  const handleProfilePhoto = async (e) => {
+    setProfilePicLoading(true);
+    setPreviewImage(e?.target?.files[0]?.name);
+    const file = e?.target?.files[0];
+
+    if (
+      !file ||
+      !(
+        file.type === "image/jpeg" ||
+        file.type === "image/png" ||
+        file.type === "image/webp"
+      )
+    ) {
+      alert("Error: Only PNG and JPEG files are allowed.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      console.log(e.target.result);
+      setPreviewImage(e.target.result);
+    };
+    reader.readAsDataURL(file);
+
+    const storageZoneName = process.env.NEXT_PUBLIC_BUNNY_STORAGE_ZONE;
+    const accessKey = process.env.NEXT_PUBLIC_BUNNY_ACCESS_KEY;
+    const storageUrl = process.env.NEXT_PUBLIC_BUNNY_STORAGE_URL;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const randomNumberToAddInImageName = generatePassword(7);
+      const response = await axios.put(
+        `${storageUrl}/${storageZoneName}/ProfilePictures/${randomNumberToAddInImageName}${file.name}`,
+        file,
+        {
+          headers: {
+            AccessKey: accessKey,
+            "Content-Type": file.type,
+          },
+        }
+      );
+
+      console.log("response: ", response);
+      const imageUrl = `https://vacationsaga.b-cdn.net/ProfilePictures/${randomNumberToAddInImageName}${file.name}`;
+
+      setProfilePic(imageUrl);
+      setProfilePicLoading(false);
+    } catch (error) {
+      alert("Error uploading image. Please try again.");
+    }
+  };
+
   return (
     <>
       <Toaster />
       <div className="nc-PageSignUp">
         <div className="container mb-24 lg:mb-32">
-          <h2 className="mb-20 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
+          <h2 className=" mb-20 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
             Signup
           </h2>
-          <div className="max-w-md mx-auto space-y-6">
-            <form className="grid grid-cols-1 gap-6" onSubmit={onSignup}>
+          <div className="max-w-md mx-auto space-y-6 ">
+            <form className="grid grid-cols-1 gap-6 " onSubmit={onSignup}>
+              <label htmlFor="file-upload">
+                <div className="lg:w-36 lg:h-36 md:w-28 md:h-28 w-20 h-20 rounded-full border border-gray-500 flex justify-center items-center mx-auto cursor-pointer hover:opacity-60 ">
+                  {((!previewImage || !profilePic) && !profilePicLoading) && (
+                    <span>
+                      {" "}
+                      <LuImagePlus className=" opacity-70 text-3xl cursor-pointer" />
+                    </span>
+                  )}
+                  <input
+                    type="file"
+                    className=" sr-only"
+                    accept="image/*"
+                    id="file-upload"
+                    name="file-upload"
+                    onChange={(e) => handleProfilePhoto(e)}
+                  />
+                  {profilePic && !profilePicLoading && (
+                    <div className=" w-full h-full rounded-full overflow-hidden transition-all">
+                      <img
+                        src={profilePic}
+                        className=" object-contain h-full w-full transition-all"
+                      />
+                    </div>
+                  )}
+                  {profilePicLoading && (
+                    <div className=" w-full h-full rounded-full overflow-hidden transition-all">
+                      <img
+                        src={previewImage}
+                        className=" opacity-70 object-contain h-full w-full transition-all"
+                      />
+                    </div>
+                  )}
+                </div>
+              </label>
+
               <label className="block">
                 <span className="text-neutral-800 dark:text-neutral-200">
                   Name
@@ -161,7 +281,6 @@ const PageSignUp= () => {
                 </div>
               </label>
 
-
               <label className="block">
                 <span className="text-neutral-800 dark:text-neutral-200">
                   Nationality
@@ -170,8 +289,8 @@ const PageSignUp= () => {
                   type="text"
                   placeholder="Your Nationality"
                   className="block w-full border-gray-600 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border "
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={nationality}
+                  onChange={(e) => setNationality(e.target.value)}
                   required
                 />
               </label>
@@ -180,17 +299,15 @@ const PageSignUp= () => {
                 <span className="text-neutral-800 dark:text-neutral-200">
                   Gender
                 </span>
-                {/* <input
-                  type="text"
-                  placeholder="Gender"
-                  className="block w-full border-gray-600 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border "
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                /> */}
-                <select name="gender" id="gender" className="block w-full border-gray-600 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border ">
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
+                <select
+                  name="gender"
+                  value={gender}
+                  id="gender"
+                  className="block w-full border-gray-600 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                  onChange={(e) => setGender(e.target.name)}
+                >
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
                 </select>
               </label>
 
@@ -202,8 +319,8 @@ const PageSignUp= () => {
                   type="text"
                   placeholder="Language"
                   className="block w-full border-gray-600 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border "
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={spokenLanguage}
+                  onChange={(e) => setSpokenLanguage(e.target.value)}
                   required
                 />
               </label>
@@ -216,8 +333,8 @@ const PageSignUp= () => {
                   type="text"
                   placeholder="Address"
                   className="block w-full border-gray-600 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border "
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
                   required
                 />
               </label>
@@ -230,14 +347,11 @@ const PageSignUp= () => {
                   type="text"
                   placeholder="Bank Details"
                   className="block w-full border-gray-600 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border "
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={bankDetails}
+                  onChange={(e) => setBankDetails(e.target.value)}
                   required
                 />
               </label>
-
-
-
 
               <label className="block">
                 <span className="text-neutral-800 dark:text-neutral-200">
@@ -272,12 +386,18 @@ const PageSignUp= () => {
                   checked={sendDetails}
                   onChange={(e) => setSendDetails(e.target.checked)}
                 />
-                <h3>
-                Send my registration details to my email
-                </h3>
-                {emailSent && <p className=" text-green-500 text-sm justify-start">Please check your spam folder also</p>}
+                <h3>Send my registration details to my email</h3>
+                {emailSent && (
+                  <p className=" text-green-500 text-sm justify-start">
+                    Please check your spam folder also
+                  </p>
+                )}
               </label>
-              <button type="submit" disabled={loading} className=" font-medium border-2 rounded-xl border-gray-600 p-2 hover:text-gray-800 hover:border-gray-800 hover:font-bold">
+              <button
+                type="submit"
+                disabled={loading}
+                className=" font-medium border-2 rounded-xl border-gray-600 p-2 hover:text-gray-800 hover:border-gray-800 hover:font-bold"
+              >
                 {loading ? (
                   <div className="flex items-center">
                     Signing up...
@@ -290,7 +410,10 @@ const PageSignUp= () => {
             </form>
             <span className="block text-center text-neutral-700 dark:text-neutral-300">
               Already have an account?
-              <Link href="/authentication/login" className="font-semibold underline">
+              <Link
+                href="/authentication/login"
+                className="font-semibold underline"
+              >
                 Sign in
               </Link>
             </span>

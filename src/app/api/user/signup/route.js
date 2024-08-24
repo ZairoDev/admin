@@ -9,11 +9,25 @@ await connectDb();
 export async function POST(request) {
   try {
     const reqBody = await request.json();
-    const { name, email, password, role, sendDetails, phone } = reqBody;
+    const {
+      name,
+      email,
+      password,
+      role,
+      sendDetails,
+      phone,
+      gender,
+      nationality,
+      spokenLanguage,
+      bankDetails,
+      address,
+      profilePic,
+    } = reqBody;
+    console.log('inside')
     console.log(reqBody);
 
     const user = await User.findOne({ email });
-    console.log(user)
+    console.log(user);
     if (user) {
       return NextResponse.json(
         { error: "User already exists" },
@@ -29,7 +43,12 @@ export async function POST(request) {
       email == null ||
       password == null ||
       role == null ||
-      phone == null
+      phone == null ||
+      gender == null ||
+      nationality == null ||
+      spokenLanguage == null ||
+      bankDetails == null ||
+      address == null
     ) {
       return NextResponse.json(
         { error: "All fields are required" },
@@ -44,22 +63,28 @@ export async function POST(request) {
       password: hashedPassword,
       role,
       phone,
+      gender,
+      nationality,
+      spokenLanguage,
+      bankDetails,
+      address,
+      profilePic
     });
 
-    console.log(newUser);
+    console.log('new user: ', newUser);
 
     const savedUser = await newUser.save();
-    console.log(savedUser);
+    console.log("saved user: ",savedUser);
 
     if (sendDetails) {
-      console.log('inside if')
+      console.log("inside if");
       await sendEmail({
         email,
         emailType: "VERIFY",
         userId: savedUser._id,
         password: reqBody.password,
       });
-      console.log('email sent')
+      console.log("email sent");
       return NextResponse.json({
         message:
           "User created successfully. Please check your email for verification.",
