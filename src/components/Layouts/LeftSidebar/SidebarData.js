@@ -28,11 +28,11 @@ export const SidebarData = [
     subNav: [
       {
         title: "Users",
-        path: "/users"
+        path: "/users",
       },
       {
         title: "Properties",
-        path: "/allproperties"
+        path: "/allproperties",
       },
       {
         title: "eCommerce",

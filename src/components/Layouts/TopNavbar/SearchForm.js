@@ -4,6 +4,7 @@ import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import Input from "@/components/Input/Input";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -34,38 +35,43 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   zIndex: "5",
 }));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    backgroundColor: "#F5F7FA",
-    borderRadius: "30px",
-    padding: theme.spacing(1.4, 0, 1.4, 2),
-    // vertical padding + font size from searchIcon
-    paddingRight: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: "260px",
-      "&:focus": {
-        width: "280px",
-      },
-    },
-  },
-}));
+// const StyledInputBase = styled(InputBase)(({ theme }) => ({
+//   // color: "inherit",
+//   "& .MuiInputBase-input": {
+//     // backgroundColor: "#F5F7FA",
+//     borderRadius: "30px",
+//     // padding: theme.spacing(1.4, 0, 1.4, 2),
+//     // vertical padding + font size from searchIcon
+//     paddingRight: `calc(1em + ${theme.spacing(4)})`,
+//     transition: theme.transitions.create("width"),
+//     width: "100%",
+//     [theme.breakpoints.up("sm")]: {
+//       width: "260px",
+//       "&:focus": {
+//         width: "280px",
+//       },
+//     },
+//   },
+// }));
 
 export default function SearchForm() {
   return (
     <>
-      <Search className="search-form">
-        <SearchIconWrapper sx={{display: { xs: 'none', sm: 'inline-flex' }}}>
-          <SearchIcon />
-        </SearchIconWrapper>
+      {/* <Search className="bg-transparent border border-white w-1/4 flex items-center">
+        {/* <SearchIconWrapper sx={{display: { xs: 'none', sm: 'inline-flex' }}}> */}
 
-        <StyledInputBase
+        {/* </SearchIconWrapper> */}
+
+        {/* <input
           placeholder="Search here.."
           inputProps={{ "aria-label": "search" }}
+          className=" p-2 bg-transparent rounded-3xl w-full"
         />
-      </Search>
+        <SearchIcon className="mx-1" /> */}
+      {/* </Search> */} 
+      <div className=" flex  w-1/2">
+        <Input className="rounded-3xl mx-2 w-1/2" isSearchIcon={true}/>
+      </div>
     </>
   );
 }

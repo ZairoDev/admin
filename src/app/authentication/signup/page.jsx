@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useState, FormEvent, useEffect } from "react";
+import React, { FC, useState, FormEvent } from "react";
 import { CgSpinner } from "react-icons/cg";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { Toaster, toast } from "sonner";
@@ -8,14 +8,15 @@ import axios from "axios";
 import countryCodesList from "country-codes-list";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { LuImagePlus } from "react-icons/lu";
-import { useQuery } from "@tanstack/react-query";
 
-const Page = ({params}) => {
-
-  const [userId, setUserId] = useState("");
+const PageSignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("Owner"); // Default role
   const [loading, setLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [sendDetails, setSendDetails] = useState(false);
   const [countryCode, setCountryCode] = useState("+1");
   const [phoneNumber, setPhoneNumber] = useState("");
 
@@ -29,51 +30,11 @@ const Page = ({params}) => {
   const [profilePicLoading, setProfilePicLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
 
-
-  const fetchUser = async () => {
-    try {
-      const response = await axios.post("/api/user/profile", {
-        userId: params.id[0],
-      });
-      console.log(response.data);
-      return response.data;
-    } catch (error) {
-      console.log("Error in fetching user");
-    }
-  };
-
-  const { data, isSuccess, isError, isPending, error } = useQuery({
-    queryKey: ["user", params.id[0]],
-    queryFn: fetchUser,
-    staleTime: 1000 * 60 * 5,
-  });
-
-  useEffect(() => {
-    setUserId(data?.data._id)
-    setName(data?.data.name);
-    setEmail(data?.data.email);
-    setCountryCode(data?.data.countryCode);
-    setNationality(data?.data.nationality);
-    setGender(data?.data.gender);
-    setSpokenLanguage(data?.data.spokenLanguage);
-    setBankDetails(data?.data.bankDetails);
-    setAddress(data?.data.address);
-    setProfilePic(data?.data.profilePic);
-
-    if (data){
-      if (data.data.phone){
-        const phoneNo = data.data.phone.split(' ')[1];
-        const code = data.data.phone.split(' ')[0];
-        setPhoneNumber(phoneNo);
-        setCountryCode(code);
-      }
-    }
-  }, [data])
-
   const countryCodes = countryCodesList.customList(
     "countryCallingCode",
     "{countryNameEn} (+{countryCallingCode})"
   );
+  const gmailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   const generatePassword = (length) => {
     const characters = "0123456789";
@@ -90,26 +51,33 @@ const Page = ({params}) => {
       toast.error("Please enter your name");
       return false;
     }
-    // if (!gmailRegex.test(email)) {
-    //   toast.error("Please enter a valid Gmail address");
+    if (!gmailRegex.test(email)) {
+      toast.error("Please enter a valid Gmail address");
+      return false;
+    }
+    // if (password !== confirmPassword) {
+    //   toast.error("Passwords do not match");
     //   return false;
     // }
     return true;
   };
 
-  const editDetails = async (e) => {
+  const onSignup = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) {
       return;
     }
-    console.log(name, phoneNumber);
+    console.log(name, email, password, role, sendDetails, phoneNumber);
     try {
       setLoading(true);
       const fullPhoneNumber = `${countryCode} ${phoneNumber}`;
       console.log(
-        userId,
         name,
+        email,
+        password,
+        role,
+        sendDetails,
         fullPhoneNumber,
         gender,
         nationality,
@@ -118,9 +86,12 @@ const Page = ({params}) => {
         address,
         profilePic
       );
-      const response = await axios.post("/api/user/editprofile", {
-        _id: userId,
+      const response = await axios.post("/api/user/signup", {
         name,
+        email,
+        password: generatePassword(7),
+        role,
+        sendDetails,
         phone: fullPhoneNumber,
         gender,
         nationality,
@@ -129,18 +100,24 @@ const Page = ({params}) => {
         address,
         profilePic,
       });
-      console.log("Profile Updates:", response.data);
+      console.log("Signup successful:", response.data);
       toast.success(
-        "Profile Updated"
+        "Signup successful! Please verify your email address via link that has been sent to your email address."
       );
+      setEmailSent(true);
       setName("");
-      setCountryCode("");
+      setEmail("");
+      setPassword("");
+      setRole("Owner");
+      setSendDetails(false);
+      setCountryCode("+1");
       setPhoneNumber("");
       setAddress("");
       setBankDetails("");
       setSpokenLanguage("");
       setGender("");
-      setProfilePic("")
+      setProfilePic('')
+      // router.push("/login")
     } catch (error) {
       console.error("Signup failed:", error);
       toast.error("Signup failed. Please try again.");
@@ -150,7 +127,6 @@ const Page = ({params}) => {
   };
 
   const handleProfilePhoto = async (e) => {
-    
     setProfilePicLoading(true);
     setPreviewImage(e?.target?.files[0]?.name);
     const file = e?.target?.files[0];
@@ -199,7 +175,6 @@ const Page = ({params}) => {
 
       setProfilePic(imageUrl);
       setProfilePicLoading(false);
-
     } catch (error) {
       alert("Error uploading image. Please try again.");
     }
@@ -211,13 +186,13 @@ const Page = ({params}) => {
       <div className="nc-PageSignUp">
         <div className="container mb-24 lg:mb-32">
           <h2 className=" mb-20 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
-            Edit Profile
+            Signup
           </h2>
           <div className="max-w-md mx-auto space-y-6 ">
-            <form className="grid grid-cols-1 gap-6 " onSubmit={editDetails}>
+            <form className="grid grid-cols-1 gap-6 " onSubmit={onSignup}>
               <label htmlFor="file-upload">
                 <div className="lg:w-36 lg:h-36 md:w-28 md:h-28 w-20 h-20 rounded-full border border-gray-500 flex justify-center items-center mx-auto cursor-pointer hover:opacity-60 ">
-                  {((!previewImage || !profilePic) && !profilePicLoading && !profilePic) && (
+                  {((!previewImage || !profilePic) && !profilePicLoading) && (
                     <span>
                       {" "}
                       <LuImagePlus className=" opacity-70 text-3xl cursor-pointer" />
@@ -272,8 +247,8 @@ const Page = ({params}) => {
                   placeholder="example@gmail.com"
                   className="block w-full border-gray-600 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border "
                   value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
-                  disabled
                 />
               </label>
 
@@ -378,21 +353,70 @@ const Page = ({params}) => {
                 />
               </label>
 
+              <label className="block">
+                <span className="text-neutral-800 dark:text-neutral-200">
+                  Role
+                </span>
+                <div className="mt-1 flex space-x-4">
+                  <label>
+                    <input
+                      type="radio"
+                      name="role"
+                      value="Owner"
+                      checked={role === "Owner"}
+                      onChange={(e) => setRole(e.target.value)}
+                    />{" "}
+                    Owner
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="role"
+                      value="Traveller"
+                      checked={role === "Traveller"}
+                      onChange={(e) => setRole(e.target.value)}
+                    />{" "}
+                    Traveller
+                  </label>
+                </div>
+              </label>
+              <label className="flex gap-2">
+                <input
+                  type="checkbox"
+                  checked={sendDetails}
+                  onChange={(e) => setSendDetails(e.target.checked)}
+                />
+                <h3>Send my registration details to my email</h3>
+                {emailSent && (
+                  <p className=" text-green-500 text-sm justify-start">
+                    Please check your spam folder also
+                  </p>
+                )}
+              </label>
               <button
                 type="submit"
                 disabled={loading}
                 className=" font-medium border-2 rounded-xl border-gray-600 p-2 hover:text-gray-800 hover:border-gray-800 hover:font-bold"
               >
                 {loading ? (
-                  <div className="flex items-center justify-center">
-                    Updating Profile...
+                  <div className="flex items-center">
+                    Signing up...
                     <CgSpinner className="animate-spin" />
                   </div>
                 ) : (
-                  "Save Details"
+                  "Sign up"
                 )}
               </button>
             </form>
+            <span className="block text-center text-neutral-700 dark:text-neutral-300">
+              Already have an account?
+              <Link
+                href="/authentication/login"
+                className="font-semibold underline"
+              >
+                Sign in
+              </Link>
+            </span>
           </div>
         </div>
       </div>
@@ -400,4 +424,4 @@ const Page = ({params}) => {
   );
 };
 
-export default Page;
+export default PageSignUp;

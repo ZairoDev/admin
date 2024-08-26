@@ -32,8 +32,8 @@ const userSchema = new mongoose.Schema(
       default:""
     },
     phone:{
-      type:Number,
-      default:""
+      type:String,
+      required: true
     },
     myRequests:{
       type:[String],
@@ -62,7 +62,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["Owner", "Traveller"],
+      enum: ["Owner", "Traveller", "Admin"],
       default: "Owner", // Optional: you can set a default role if needed
     },
 

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
@@ -8,13 +8,13 @@ import { usePathname } from "next/navigation";
 
 const SidebarLabel = styled("span")(({ theme }) => ({
   position: "relative",
-  top: "-3px",
+  top: "3px",
 }));
 
 const SubMenu = ({ item }) => {
   const [subnav, setSubnav] = useState(false);
-  const showSubnav = () => setSubnav(!subnav); 
-  const pathname = usePathname()
+  const showSubnav = () => setSubnav(!subnav);
+  const pathname = usePathname();
 
   return (
     <>
@@ -25,9 +25,9 @@ const SubMenu = ({ item }) => {
           pathname == item.path && "sidebarLinkActive"
         }`}
       >
-        <div>
-          {item.icon}
-          <SidebarLabel className="ml-1">{item.title}</SidebarLabel>
+        <div className="flex w-full items-center gap-2 p-1">
+          <div className=" "> {item.icon}</div>
+          <SidebarLabel className="">{item.title}</SidebarLabel>
         </div>
         <div>
           {item.subNav && subnav
@@ -45,7 +45,7 @@ const SubMenu = ({ item }) => {
               key={index}
               className={`${styles.sidebarLink2} ${
                 pathname == item.path && "sidebarLinkActive2"
-              }`}
+              } flex items-center`}
             >
               {item.icon}
               {item.title}

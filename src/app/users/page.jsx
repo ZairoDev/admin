@@ -7,9 +7,9 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { useUsers } from "@/Hooks/useUsers";
 import { LuLoader2 } from "react-icons/lu";
-import UserTable from "@/components/Table/Table";
+// import UserTable from "@/components/Table/Table";
+import UserTable from "../../components/Table/Table";
 import PaginationComponent from "@/components/Pagination/pagination";
 import Loader from "@/components/Loader/Loader";
 import axios from "axios";

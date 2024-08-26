@@ -13,6 +13,7 @@ import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
 import styles from "@/components/Apps/FileManager/LeftSidebar.module.css";
+import Input from "@/components/Input/Input";
 
 // Search field style
 const Search = styled("div")(({ theme }) => ({
@@ -93,7 +94,7 @@ const LeftSidebar = () => {
         </Typography>
 
         {/* Search */}
-        <Search className="ls-search-form">
+        {/* <Search className="ls-search-form">
           <SearchIconWrapper className="search-btn">
             <SearchIcon />
           </SearchIconWrapper>
@@ -101,7 +102,8 @@ const LeftSidebar = () => {
             placeholder="Search here.."
             inputProps={{ "aria-label": "search" }}
           />
-        </Search>
+        </Search> */}
+        <Input className="rounded-3xl my-2" isSearchIcon={true}/>
 
         {/* Nav */}
         <ul className={styles.leftNav}>
