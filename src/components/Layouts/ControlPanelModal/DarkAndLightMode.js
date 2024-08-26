@@ -58,7 +58,7 @@ const DarkAndLightMode = () => {
             textTransform: "capitalize",
             fontSize: '13px'
           }}
-          className="whiteColor"
+          className=" dark:bg-PrimaryColor dark:text-white p-2 text-gray-700"
         >
           Switch to {isDarkMode ? "Light Mode" : "Dark Mode"}
         </Button>

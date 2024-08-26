@@ -47,7 +47,7 @@ const RTLSwitch = () => {
               textTransform: 'capitalize',
               fontSize: '13px'
             }}
-            className="whiteColor mr-10px"
+            className="whiteColor mr-10px dark:bg-PrimaryColor dark:text-white p-2"
             onClick={handleButtonClick}
           >
             Switch to RTL/LTR

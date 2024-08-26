@@ -58,7 +58,7 @@ const OnlyTopNavbarDark = () => {
             textTransform: 'capitalize',
             fontSize: '13px'
           }}
-          className="whiteColor"
+          className="whiteColor dark:bg-PrimaryColor dark:text-white p-2"
         >
           Switch to {isDarkMode ? "Light Mode" : "Dark Mode"}
         </Button>

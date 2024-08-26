@@ -3,6 +3,7 @@ import User from "../../../../models/user";
 import { NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { sendEmail } from "../newauth/route";
 
 connectDb();
 
@@ -20,7 +21,7 @@ export async function POST(request) {
         { status: 400 }
       );
     }
-    console.log("user exists");
+    console.log("user exists", user);
 
     // Check if user is verified
     if (!user.isVerified) {
@@ -29,9 +30,10 @@ export async function POST(request) {
         { status: 400 }
       );
     }
-
+    console.log('here');
     // Check if password is correct
     const validPassword = await bcryptjs.compare(password, user.password);
+    console.log(validPassword);
     if (!validPassword) {
       return NextResponse.json(
         { error: "Invalid email or password" },
@@ -39,6 +41,16 @@ export async function POST(request) {
       );
     }
     console.log(user);
+
+    if (user.role === "Admin") {
+      const response = await sendEmail({
+        email,
+        emailType: "OTP",
+        userId: user._id,
+      });
+      console.log("Admin login mail: ", response);
+      return NextResponse.json({message: "Verification OTP sent"}, {status: 200});
+    }
 
     // Create token data
     const tokenData = {
@@ -60,7 +72,7 @@ export async function POST(request) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
     });
-   
+
     return response;
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

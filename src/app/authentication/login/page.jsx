@@ -1,5 +1,5 @@
 "use client";
-import React, {useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Toaster, toast } from "sonner";
 import { CgSpinner } from "react-icons/cg";
 import axios from "axios";
@@ -8,7 +8,6 @@ import Link from "next/link";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import Cookies from "js-cookie";
 import { parseCookies } from "nookies";
-
 
 const PageLogin = ({}) => {
   const [email, setEmail] = useState("");
@@ -33,7 +32,21 @@ const PageLogin = ({}) => {
         email,
         password,
       });
+      console.log(response);
+      if (response?.data?.message === "Verification OTP sent") {
+        console.log("here");
+        const eemail = encodeURIComponent(email); 
+        console.log(eemail);
+        router.push(`/verify-otp/${email}`);
+        // router.push({
+        //   pathname: "/verify-otp",
+        //   query: { email: email },
+        // });
+        return;
+      }
+
       if (response.status === 200) {
+        console.log("here");
         toast.success("Login successful");
         Cookies.set("token", response.data.token, { expires: 1 });
         localStorage.setItem("token", response.data.token);
@@ -104,7 +117,11 @@ const PageLogin = ({}) => {
                   )}
                 </span>
               </label>
-              <button type="submit" disabled={isLoggingIn} className=" font-medium border-2 border-gray-600 p-2 hover:text-gray-800 hover:border-gray-800 hover:font-bold">
+              <button
+                type="submit"
+                disabled={isLoggingIn}
+                className=" font-medium border-2 border-gray-600 p-2 hover:text-gray-800 hover:border-gray-800 hover:font-bold"
+              >
                 {isLoggingIn ? (
                   <div className="flex justify-center">
                     logging in.. <CgSpinner className="animate-spin text-2xl" />

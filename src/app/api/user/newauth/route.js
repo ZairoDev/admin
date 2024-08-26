@@ -7,21 +7,21 @@ import {
 } from "@/app/emailTemplate/email";
 import { NextResponse } from "next/server";
 
+
 export const sendEmail = async ({ email, emailType, userId, password }) => {
+  let otp = 999999;
   try {
-    console.log('inside sendEmail')
+    console.log("inside sendEmail");
     const hashedToken = await bcryptjs.hash(userId.toString(), 10);
     const encodedToken = encodeURIComponent(hashedToken); // Encode the token
 
     if (emailType === "VERIFY") {
-      console.log('verify');
       await Users.findByIdAndUpdate(userId, {
         $set: {
           verifyToken: hashedToken,
           verifyTokenExpiry: new Date(Date.now() + 3600000),
         },
       });
-      console.log('verified');
     } else if (emailType === "RESET") {
       await Users.findByIdAndUpdate(userId, {
         $set: {
@@ -29,6 +29,14 @@ export const sendEmail = async ({ email, emailType, userId, password }) => {
           forgotPasswordTokenExpiry: new Date(Date.now() + 3600000),
         },
       });
+    } else if (emailType === "OTP") {
+      otp = Math.floor(100000 + Math.random() * 900000);
+      await Users.findByIdAndUpdate(userId, {
+        $set: {
+          otpToken: otp,
+          otpTokenExpiry: new Date(Date.now() + 300000),
+        },
+      })
     }
 
     let transporter = nodemailer.createTransport({
@@ -51,7 +59,7 @@ export const sendEmail = async ({ email, emailType, userId, password }) => {
       to: email,
       subject:
         emailType === "VERIFY" ? "Verify your email" : "Reset Your Password",
-      html: templateContent,
+      html: emailType !== "OTP" ? templateContent : `<p>${otp}</p>`,
     };
     const mailResponse = await transporter.sendMail(mailOptions);
     return mailResponse;

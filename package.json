@@ -36,6 +36,7 @@
     "dayjs": "^1.11.7",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.3",
+    "ioredis": "^5.4.1",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "lodash.debounce": "^4.0.8",
@@ -56,6 +57,7 @@
     "react-simple-maps": "^3.0.0",
     "react-tabs": "^6.0.2",
     "recharts": "^2.12.7",
+    "redis": "^4.7.0",
     "sass": "^1.57.1",
     "sonner": "^1.5.0",
     "swiper": "^11.1.3"
