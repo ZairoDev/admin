@@ -8,6 +8,7 @@ import Loader from "@/components/Loader/Loader";
 import ProprtyCard from "@/components/Card/Card";
 import { useRouter } from "next/navigation";
 import debounce from "lodash.debounce";
+import Input from "@/components/Input/Input";
 const fetchProperties = async (
   currentPage,
   limit = 20,
@@ -106,26 +107,22 @@ const AllPropertiesPage = () => {
         <div className="flex items-center justify-between sm:justify-normal">
           <form
             onSubmit={handleSearch}
-            className="mb-4 flex items-center gap-x-2"
-          >
+            className="mb-4 flex items-center gap-x-2">
             <select
               value={searchType}
               onChange={handleSearchTypeChange}
-              className="block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
-            >
+              className="block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border">
               <option value="VSID">VSID</option>
               <option value="email">Email</option>
               <option value="phone">Phone</option>
             </select>
-            <div className="relative flex items-center justify-center">
-              <input
-                className="outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+            <div className=" flex w-full items-center justify-center">
+              <Input
+                className="w-1/2"
                 placeholder={`Search by ${searchType}`}
                 onChange={handleInputChange}
               />
-              <IoSearchOutline className="absolute right-6" />
             </div>
-
             <button
               className="items-center sm:flex hidden text-white dark:text-white justify-center px-6 py-3 darkbg-white bg-PrimaryColor rounded-2xl"
               type="submit"
