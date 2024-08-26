@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { MdArrowDropDown, MdArrowRight } from "react-icons/md";
 import toast, { Toaster } from "react-hot-toast";
 
-
 const EditPropertyPage = ({ params }) => {
   const router = useRouter();
   const [property, setProperty] = useState(null);
@@ -171,7 +170,7 @@ const EditPropertyPage = ({ params }) => {
             <div className="w-full">
               <h1 className="text-base ml-1 ">VSID (Can not edit)</h1>
               <input
-                className="block w-full cursor-not-allowed border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                className="custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                 type="text"
                 name="VSID"
                 value={formData?.VSID || ""}
@@ -186,7 +185,7 @@ const EditPropertyPage = ({ params }) => {
                 id="propertyType"
                 value={formData.propertyType}
                 onChange={(e) => handleChange(e)}
-                className=" block w-full border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                className=" custom-input cursor-pointer dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
               >
                 <option value="" disabled>
                   Select an option
@@ -312,7 +311,7 @@ const EditPropertyPage = ({ params }) => {
             <label className=" w-full text-base ">
               Place Name
               <input
-                className="block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                className="custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                 type="text"
                 name="placeName"
                 value={formData?.placeName || ""}
@@ -322,7 +321,7 @@ const EditPropertyPage = ({ params }) => {
             <label className="w-full ">
               <h1 className="w-full text-base ml-1">Rental Form</h1>
               <input
-                className="block cursor-not-allowed w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                className="custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                 type="text"
                 name="rentalForm"
                 value={formData?.rentalForm || "No data available"}
@@ -339,7 +338,7 @@ const EditPropertyPage = ({ params }) => {
                 name="rentalType"
                 id="rentalType"
                 value={formData.rentalType}
-                className=" block w-full border-neutral-200  focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                className=" custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
               >
                 <option
                   value="Short Term"
@@ -358,7 +357,7 @@ const EditPropertyPage = ({ params }) => {
             <label className="w-full">
               <h1 className="w-full text-base ml-1">Postal Code</h1>
               <input
-                className="block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                className="custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                 type="text"
                 name="postalCode"
                 value={formData?.postalCode || ""}
@@ -372,7 +371,7 @@ const EditPropertyPage = ({ params }) => {
               <label>
                 <h1 className="text-base ml-2">City</h1>
                 <input
-                  className="block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                  className="custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                   type="text"
                   name="city"
                   value={formData?.city || ""}
@@ -384,7 +383,7 @@ const EditPropertyPage = ({ params }) => {
               <label>
                 <h1 className="text-base ml-2">State</h1>
                 <input
-                  className="block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                  className="custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                   type="text"
                   name="state"
                   value={formData?.state || ""}
@@ -399,7 +398,7 @@ const EditPropertyPage = ({ params }) => {
               <label className="text-base ml-1">
                 Country
                 <input
-                  className="block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                  className="custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                   type="text"
                   name="country"
                   value={formData?.country || ""}
@@ -411,7 +410,7 @@ const EditPropertyPage = ({ params }) => {
               <label className="">
                 <h1 className="text-base ml-1">Street</h1>
                 <input
-                  className="block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                  className="custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                   type="text"
                   name="street"
                   value={formData?.street || ""}
@@ -426,7 +425,7 @@ const EditPropertyPage = ({ params }) => {
               <label>
                 <h1 className="text-base ml-1">Pet Friendly</h1>
                 <input
-                  className="block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                  className="custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                   type="text"
                   name="pet"
                   value={formData?.pet || ""}
@@ -438,7 +437,7 @@ const EditPropertyPage = ({ params }) => {
               <label>
                 <h1 className="text-base ml-1">Party Friendly</h1>
                 <input
-                  className="block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                  className="custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                   type="text"
                   name="party"
                   value={formData?.party || ""}
@@ -453,7 +452,7 @@ const EditPropertyPage = ({ params }) => {
               <label>
                 <h1 className="text-base ml-1">Cooking</h1>
                 <input
-                  className="block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                  className="custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                   type="text"
                   name="cooking"
                   value={formData?.cooking || ""}
@@ -465,7 +464,7 @@ const EditPropertyPage = ({ params }) => {
               <label>
                 <h1 className="ml-1 text-base">Smoking</h1>
                 <input
-                  className="block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                  className="custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                   type="text"
                   name="smoking"
                   value={formData?.smoking || ""}
@@ -540,7 +539,7 @@ const EditPropertyPage = ({ params }) => {
                       >
                         Number Of Guests
                         <input
-                          className=" block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                          className="custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                           type="number"
                           name="guests"
                           value={formData?.guests?.at(index) || ""}
@@ -561,7 +560,7 @@ const EditPropertyPage = ({ params }) => {
                       <label className="w-full ml-1" htmlFor="bedrooms">
                         Number Of Bedrooms
                         <input
-                          className=" block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                          className=" custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                           type="number"
                           name="bedrooms"
                           value={formData?.bedrooms?.at(index) || ""}
@@ -580,7 +579,7 @@ const EditPropertyPage = ({ params }) => {
                       <label className="text-base w-full ml-1" htmlFor="beds">
                         Number Of Beds
                         <input
-                          className=" block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                          className=" custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                           type="number"
                           name="beds"
                           value={formData?.beds?.at(index) || ""}
@@ -602,7 +601,7 @@ const EditPropertyPage = ({ params }) => {
                       >
                         Number Of Bathrooms
                         <input
-                          className=" block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                          className=" custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                           type="number"
                           name="bathroom"
                           value={formData?.bathroom?.at(index) || ""}
@@ -626,7 +625,7 @@ const EditPropertyPage = ({ params }) => {
                       >
                         Number Of Kitchen
                         <input
-                          className=" block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                          className=" custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                           type="number"
                           name="kitchen"
                           value={formData?.kitchen?.at(index) || ""}
@@ -647,7 +646,7 @@ const EditPropertyPage = ({ params }) => {
                       >
                         Children&apos;s Age
                         <input
-                          className="block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                          className="custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                           type="number"
                           name="childrenAge"
                           value={formData?.childrenAge?.at(index) || ""}
@@ -668,7 +667,7 @@ const EditPropertyPage = ({ params }) => {
                       >
                         Base Price Of Portion {index + 1}
                         <input
-                          className=" block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                          className=" custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                           type="number"
                           name="basePrice"
                           value={formData?.basePrice?.at(index) || ""}
@@ -691,7 +690,7 @@ const EditPropertyPage = ({ params }) => {
                       >
                         Weekend Price Of Portion {index + 1}
                         <input
-                          className=" block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                          className=" custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                           type="number"
                           name="weekendPrice"
                           value={formData?.weekendPrice?.at(index) || ""}
@@ -712,7 +711,7 @@ const EditPropertyPage = ({ params }) => {
                       >
                         Monthly Discount For Portion {index + 1}
                         <input
-                          className=" block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+                          className=" custom-input dark:bg-neutral-900  dark:border-neutral-700 dark:text-white"
                           type="number"
                           name="monthlyDiscount"
                           value={formData?.monthlyDiscount?.at(index) || ""}

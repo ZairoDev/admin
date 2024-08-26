@@ -23,18 +23,19 @@ const fetchProperties = async (
 const AllPropertiesPage = () => {
   const router = useRouter();
 
-  const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    const savedPage = localStorage.getItem("page");
-    if (savedPage) {
-      setCurrentPage(parseInt(savedPage));
+  const [currentPage, setCurrentPage] = useState(() => {
+    const IsServer = typeof window === "undefined";
+    if (!IsServer) {
+      const savedPage = localStorage.getItem("page");
+      if (savedPage) {
+        return parseInt(savedPage);
+      } else {
+        return 1;
+      }
+    } else {
+      return 1;
     }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("page", currentPage.toString());
-  }, [currentPage]);
+  });
 
   const [searchTerm, setSearchTerm] = useState("");
   const [searchType, setSearchType] = useState("VSID");
@@ -50,10 +51,12 @@ const AllPropertiesPage = () => {
   });
 
   useEffect(() => {
-    if (window.localStorage != undefined) {
-      window.localStorage.setItem("page", currentPage);
+    const IsServer = typeof window === "undefined";
+    if (!IsServer) {
+      localStorage.setItem("page", currentPage);
     }
-  });
+
+  }, [currentPage]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -68,13 +71,14 @@ const AllPropertiesPage = () => {
       }
     );
   };
-
   const handleInputChange = debounce((e) => {
     setSearchTerm(e.target.value);
+    console.log(e.target.value);
   }, 3000);
 
   const handleSearchTypeChange = (e) => {
     setSearchType(e.target.value);
+    
   };
   const handlePageChange = (number) => {
     setCurrentPage(number);
