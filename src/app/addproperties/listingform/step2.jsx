@@ -1,13 +1,62 @@
 "use client";
 import Input from "@/components/Input/Input";
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import {
+  getFromLocalStorage,
+  updateLocalStorage,
+} from "../../../helper/localStorage";
 const Step2 = ({ nextStep, prevStep }) => {
   const [selectedCountry, setSelectedCountry] = useState("");
-
+  const [placeLocation, setplaceLocation] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [postalCode, setPostalCode] = useState("");
   const handleCountryChange = (event) => {
     setSelectedCountry(event.target.value);
+    updateLocalStorage("page2", "country", event.target.value);
   };
+
+  const handlePlaceLocation = (event) => {
+    console.log(event.target.value);
+    setplaceLocation(event.target.value);
+    updateLocalStorage("page2", "placeLocation", event.target.value);
+  };
+
+  const handleCity = (event) => {
+    setCity(event.target.value);
+    updateLocalStorage("page2", "city", event.target.value);
+  };
+
+  const handleState = (event) => {
+    setState(event.target.value);
+    updateLocalStorage("page2", "state", event.target.value);
+  };
+
+  const handlePostalCode = (event) => {
+    setPostalCode(event.target.value);
+    updateLocalStorage("page2", "postalCode", event.target.value);
+  };
+  useEffect(() => {
+    const storedData = getFromLocalStorage("page2");
+
+    if (storedData) {
+      if (storedData.country) {
+        setSelectedCountry(storedData.country);
+      }
+      if (storedData.placeLocation) {
+        setplaceLocation(storedData.placeLocation);
+      }
+      if (storedData.city) {
+        setCity(storedData.city);
+      }
+      if (storedData.state) {
+        setState(storedData.state);
+      }
+      if (storedData.postalCode) {
+        setPostalCode(storedData.postalCode);
+      }
+    }
+  }, []);
 
   const handleNext = () => {
     nextStep();
@@ -65,31 +114,33 @@ const Step2 = ({ nextStep, prevStep }) => {
       </div>
       <div className="mt-4">
         <lable className="ml-1 ">Your place location</lable>
-        <Input />
+        <Input value={placeLocation} onChange={handlePlaceLocation} />
       </div>
       <div className="flex mt-4 items-center justify-between">
         <div>
           <lable className="ml-1 ">City</lable>
-          <Input className={"w-72"} />
+          <Input value={city} onChange={handleCity} className={"w-72"} />
         </div>
         <div>
           <lable className="ml-1 ">State</lable>
-          <Input className={"w-72"} />
+          <Input onChange={handleState} value={state} className={"w-72"} />
         </div>
         <div>
           <lable className="ml-1 ">Postal Code</lable>
-          <Input className={"w-72"} />
+          <Input
+            onChange={handlePostalCode}
+            value={postalCode}
+            className={"w-72"}
+          />
         </div>
       </div>
+      {/* For Future use that gives you a access that this property pinnde on the map */}
       <div className="mt-4">
         <p className="ml-1">Coordinates</p>
         <div className="flex ml-1  items-center gap-x-20">
           <p> Latitude{0}</p>
           <p> Longitude{0}</p>
         </div>
-      </div>
-      <div className="mt-4 ml-1">
-        <p>Detailed Address</p>
       </div>
       <div className="flex items-center gap-x-4">
         <button

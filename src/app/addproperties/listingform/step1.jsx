@@ -11,6 +11,7 @@ const Step1 = ({ nextStep }) => {
   const [selectedPropertyType, setSelectedPropertyType] = useState("");
   const [placeName, setPlaceName] = useState("");
   const [selectedRentalType, setSelectedRentalType] = useState("");
+  const [portionCount, setPortionCount] = useState("");
 
   const rentalTypes = [
     "Private Area",
@@ -43,48 +44,53 @@ const Step1 = ({ nextStep }) => {
   const HandlePropertyChange = (event) => {
     const value = event.target.value;
     setSelectedPropertyType(value);
-    updateLocalStorage("propertyType", value);
+    updateLocalStorage("page1", "propertyType", value);
   };
 
   const handleSelectCategory = (event) => {
     const value = event.target.value;
     setCotegries(value);
-    updateLocalStorage("category", value);
+    updateLocalStorage("page1", "category", value);
     console.log(value);
   };
   const handlePlaceName = (event) => {
     const value = event.target.value;
     setPlaceName(value);
-    updateLocalStorage("placeName", value);
+    updateLocalStorage("page1", "placeName", value);
     console.log(value);
-    
   };
   const handleRentalType = (event) => {
     const value = event.target.value;
     setSelectedRentalType(value);
-    updateLocalStorage("rentalType", value);
+    updateLocalStorage("page1", "rentalType", value);
     console.log(value);
   };
 
+  const handlePortionCount = (event) => {
+    const value = event.target.value;
+    setPortionCount(value);
+    updateLocalStorage("page1", "portionCount", value);
+  };
   // For getting the value from the localstorage so that next time user came so they got the exact input prefilled
-
   useEffect(() => {
-    const storedcatogries = getFromLocalStorage("category");
-    const storedPropertyType = getFromLocalStorage("propertyType");
-    const storedRentalType = getFromLocalStorage("rentalType");
-    const storedPlaceName = getFromLocalStorage("placeName");
+    const storedData = getFromLocalStorage("page1");
 
-    if (storedcatogries) {
-      setCotegries(storedcatogries);
-    }
-    if (storedPropertyType) {
-      setSelectedPropertyType(storedPropertyType);
-    }
-    if (storedRentalType) {
-      setSelectedRentalType(storedRentalType);
-    }
-    if (storedPlaceName) {
-      setPlaceName(storedPlaceName);
+    if (storedData) {
+      if (storedData.category) {
+        setCotegries(storedData.category);
+      }
+      if (storedData.propertyType) {
+        setSelectedPropertyType(storedData.propertyType);
+      }
+      if (storedData.rentalType) {
+        setSelectedRentalType(storedData.rentalType);
+      }
+      if (storedData.placeName) {
+        setPlaceName(storedData.placeName);
+      }
+      if (storedData.portionCount) {
+        setPortionCount(storedData.portionCount);
+      }
     }
   }, []);
 
@@ -154,7 +160,11 @@ const Step1 = ({ nextStep }) => {
 
         <div className="mt-6">
           <lable className="ml-1">Place name</lable>
-          <Input onChange={handlePlaceName} value={placeName} placeholder={"Place name"} />
+          <Input
+            onChange={handlePlaceName}
+            value={placeName}
+            placeholder={"Place name"}
+          />
           <p className="text-xs ml-1">
             A catchy name usually includes: House name + Room name + Featured
             property + Tourist destination
@@ -182,6 +192,13 @@ const Step1 = ({ nextStep }) => {
             private entrance and no shared spaces.
             <br /> A bedroom, bathroom, and kitchen are usually included
           </p>
+          <div className="mt-4">
+            <Input
+              placeholder={"Portion Count"}
+              onChange={handlePortionCount}
+              value={portionCount}
+            />
+          </div>
         </div>
         <button
           onClick={handleNext}

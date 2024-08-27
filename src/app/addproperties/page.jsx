@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Step1 from "./listingform/step1";
 import Step2 from "./listingform/step2";
-
+import Step3 from "./listingform/step3";
 const ListingForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 10;
@@ -38,6 +38,15 @@ const ListingForm = () => {
             isPrevDisabled={false}
           />
         );
+      case 3:
+        return (
+          <Step3
+            nextStep={nextStep}
+            prevStep={prevStep}
+            isNextDisabled={false}
+            isPrevDisabled={false}
+          />
+        );
       default:
         return (
           <Step1
@@ -61,7 +70,8 @@ const ListingForm = () => {
                   currentStep === index + 1
                     ? "bg-PrimaryColor text-white dark:text-white"
                     : "bg-gray-300 text-gray-700"
-                }`}>
+                }`}
+            >
               {index + 1}
             </div>
           </div>

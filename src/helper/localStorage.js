@@ -1,13 +1,17 @@
 
 
-export const updateLocalStorage = (key, value) => {
-    localStorage.setItem(key, JSON.stringify(value));
-  };
+export const updateLocalStorage = (pageKey, key, value) => {
+  let storedData = getFromLocalStorage(pageKey) || {};
+  storedData[key] = value;
+  localStorage.setItem(pageKey, JSON.stringify(storedData));
+};
+
   
-  export const getFromLocalStorage = (key) => {
-    const value = localStorage.getItem(key);
-    return value ? JSON.parse(value) : null;
-  };
+export const getFromLocalStorage = (pageKey) => {
+  const value = localStorage.getItem(pageKey);
+  return value ? JSON.parse(value) : {};
+};
+
   
   export const removeFromLocalStorage = (key) => {
     localStorage.removeItem(key);
