@@ -35,8 +35,6 @@ const PageLogin = ({}) => {
       console.log(response);
       if (response?.data?.message === "Verification OTP sent") {
         console.log("here");
-        const eemail = encodeURIComponent(email); 
-        console.log(eemail);
         router.push(`/verify-otp/${email}`);
         // router.push({
         //   pathname: "/verify-otp",
@@ -54,8 +52,10 @@ const PageLogin = ({}) => {
       }
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.data?.error) {
+        console.log('error', err.response.data);
         toast.error(err.response.data.error);
       } else {
+        console.error(err);
         toast.error("Login failed. Please check your credentials.");
       }
     } finally {
@@ -107,7 +107,8 @@ const PageLogin = ({}) => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-                <span className="absolute inset-y-0 right-3 top-9 cursor-pointer text-xl text-neutral-800 dark:text-neutral-200">
+                <span className="absolute inset-y-0 right-3 top-11 cursor-pointer text-xl text-neutral-800 dark:text-neutral-200 flex itecen">
+                  
                   {showPassword ? (
                     <AiFillEyeInvisible
                       onClick={() => setShowPassword(!showPassword)}
@@ -120,7 +121,7 @@ const PageLogin = ({}) => {
               <button
                 type="submit"
                 disabled={isLoggingIn}
-                className=" font-medium border-2 border-gray-600 p-2 hover:text-gray-800 hover:border-gray-800 hover:font-bold"
+                className=" font-medium  bg-PrimaryColor text-white dark:text-white rounded-2xl p-2 hover:text-gray-800 hover:border-gray-800 hover:font-bold"
               >
                 {isLoggingIn ? (
                   <div className="flex justify-center">
@@ -133,7 +134,7 @@ const PageLogin = ({}) => {
             </form>
             <span className="block text-center text-neutral-700 dark:text-neutral-300">
               New user?{" "}
-              <Link href="/signup" className="font-semibold underline">
+              <Link href="/authentication/signup" className="font-semibold underline">
                 Create an account
               </Link>
             </span>

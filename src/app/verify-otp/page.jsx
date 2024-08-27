@@ -7,12 +7,13 @@ import { Router } from "next/router";
 const page = ({params}) => {
 	const router = useRouter();
   const [otpInput, setOtpInput] = useState("");
-  // const email = params.email;
-  // console.log(email);
-  const {email} = router.query;
+  const email = params.email;
   console.log(email);
+  // const {email} = router.query;
+  // console.log(email);
 
   const handleOTPverification = async () => {
+    console.log(email);
     const response = await axios.post("/api/verify-otp", { otp: otpInput, email });
     console.log(response);
     console.log(response.data);
