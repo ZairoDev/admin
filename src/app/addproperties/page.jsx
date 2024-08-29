@@ -9,6 +9,7 @@ import Step6 from "./listingform/step6";
 import Step7 from "./listingform/step7";
 import Step8 from "./listingform/step8";
 import Step9 from "./listingform/step9";
+import Step10 from "./listingform/step10";
 
 const ListingForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -108,6 +109,15 @@ const ListingForm = () => {
             isPrevDisabled={false}
           />
         );
+        case 10:
+          return (
+            <Step10
+              nextStep={nextStep}
+              prevStep={prevStep}
+              isNextDisabled={true}
+              isPrevDisabled={false}
+            />
+          );
       default:
         return (
           <Step1

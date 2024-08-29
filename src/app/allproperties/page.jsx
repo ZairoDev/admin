@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import { GoPlus } from "react-icons/go";
 import { IoSearchOutline } from "react-icons/io5";
 import { useQuery } from "@tanstack/react-query";
 import PaginationComponent from "@/components/Pagination/pagination";
@@ -56,7 +57,6 @@ const AllPropertiesPage = () => {
     if (!IsServer) {
       localStorage.setItem("page", currentPage);
     }
-
   }, [currentPage]);
 
   const handleSearch = (e) => {
@@ -79,7 +79,6 @@ const AllPropertiesPage = () => {
 
   const handleSearchTypeChange = (e) => {
     setSearchType(e.target.value);
-    
   };
   const handlePageChange = (number) => {
     setCurrentPage(number);
@@ -107,11 +106,13 @@ const AllPropertiesPage = () => {
         <div className="flex items-center justify-between sm:justify-normal">
           <form
             onSubmit={handleSearch}
-            className="mb-4 flex items-center gap-x-2">
+            className="mb-4 flex items-center gap-x-2"
+          >
             <select
               value={searchType}
               onChange={handleSearchTypeChange}
-              className="block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border">
+              className="block w-full outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+            >
               <option value="VSID">VSID</option>
               <option value="email">Email</option>
               <option value="phone">Phone</option>
@@ -140,6 +141,7 @@ const AllPropertiesPage = () => {
           </form>
         </div>
       </div>
+
       {data && data.data.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-items-center">
           {data.data.map((property) => (
