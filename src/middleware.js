@@ -39,7 +39,6 @@ export const config = {
 		"/users",
 		"/allproperties",
     "/authentication/login/",
-    "/authentication/signup/",
     "/verify-otp/:path*",
   ],
 };
