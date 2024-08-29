@@ -5,23 +5,20 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(request) {
   const path = request.nextUrl.pathname;
 
+  const otpPath = /^\/verify-otp\/.+$/.test(path);
+  console.log("otp path check: ",otpPath);
+
   const isPublicPath =
-    path === "/authentication/login" ||
-    path === "/authentication/signup" ||
-    path === "/verify-otp";
+    path === "/authentication/login/" ||
+    path === "/authentication/signup/" ||
+    path === "/verify-otp/" ||
+    otpPath;
 
   const token = request.cookies.get("token")?.value || "";
-  console.log("token from middleware: ", token);
+  console.log("token from middleware: ", token, path);
 
-  // Always allow access to the home route
-  // if (path === "/") {
-  //   return NextResponse.next();
-  // }
-	console.log("\n", isPublicPath, token);
+  console.log(isPublicPath);
 
-	if (!token){
-		return NextResponse.redirect(new URL("/authentication/login", request.url));
-	}
 
   if (isPublicPath && token) {
 		console.log(isPublicPath, token);
@@ -29,7 +26,7 @@ export function middleware(request) {
   }
 
   if (!isPublicPath && !token) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/authentication/login", request.url));
   }
 
   return NextResponse.next();
@@ -41,5 +38,8 @@ export const config = {
     "/",
 		"/users",
 		"/allproperties",
+    "/authentication/login/",
+    "/authentication/signup/",
+    "/verify-otp/:path*",
   ],
 };

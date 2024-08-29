@@ -20,7 +20,7 @@ export async function GET(request) {
 
     const skip = (currentPage - 1) * 20;
     console.log(currentPage);
-    const allUsers = await Users.find(query).limit(20).skip(skip); 
+    const allUsers = await Users.find(query).limit(20).skip(skip).sort({_id: -1});
     const totalUsers = await Users.countDocuments(query);
 
     console.log(totalUsers, allUsers);

@@ -15,7 +15,7 @@ const PageLogin = ({}) => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const token = Cookies.get("token");
+  // const token = Cookies.get("token");
 
   useEffect(() => {
     const { token } = parseCookies();
@@ -47,7 +47,6 @@ const PageLogin = ({}) => {
         console.log("here");
         toast.success("Login successful");
         Cookies.set("token", response.data.token, { expires: 1 });
-        localStorage.setItem("token", response.data.token);
         router.push("/");
       }
     } catch (err) {
