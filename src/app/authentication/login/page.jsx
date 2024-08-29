@@ -1,5 +1,5 @@
 "use client";
-import React, {useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Toaster, toast } from "sonner";
 import { CgSpinner } from "react-icons/cg";
 import axios from "axios";
@@ -9,14 +9,13 @@ import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import Cookies from "js-cookie";
 import { parseCookies } from "nookies";
 
-
 const PageLogin = ({}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const token = Cookies.get("token");
+  // const token = Cookies.get("token");
 
   useEffect(() => {
     const { token } = parseCookies();
@@ -33,16 +32,29 @@ const PageLogin = ({}) => {
         email,
         password,
       });
+      console.log(response);
+      if (response?.data?.message === "Verification OTP sent") {
+        console.log("here");
+        router.push(`/verify-otp/${email}`);
+        // router.push({
+        //   pathname: "/verify-otp",
+        //   query: { email: email },
+        // });
+        return;
+      }
+
       if (response.status === 200) {
+        console.log("here");
         toast.success("Login successful");
         Cookies.set("token", response.data.token, { expires: 1 });
-        localStorage.setItem("token", response.data.token);
         router.push("/");
       }
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.data?.error) {
+        console.log('error', err.response.data);
         toast.error(err.response.data.error);
       } else {
+        console.error(err);
         toast.error("Login failed. Please check your credentials.");
       }
     } finally {
@@ -94,7 +106,8 @@ const PageLogin = ({}) => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-                <span className="absolute inset-y-0 right-3 top-9 cursor-pointer text-xl text-neutral-800 dark:text-neutral-200">
+                <span className="absolute inset-y-0 right-3 top-11 cursor-pointer text-xl text-neutral-800 dark:text-neutral-200 flex itecen">
+                  
                   {showPassword ? (
                     <AiFillEyeInvisible
                       onClick={() => setShowPassword(!showPassword)}
@@ -104,7 +117,11 @@ const PageLogin = ({}) => {
                   )}
                 </span>
               </label>
-              <button type="submit" disabled={isLoggingIn} className=" font-medium border-2 border-gray-600 p-2 hover:text-gray-800 hover:border-gray-800 hover:font-bold">
+              <button
+                type="submit"
+                disabled={isLoggingIn}
+                className=" font-medium  bg-PrimaryColor text-white dark:text-white rounded-2xl p-2 hover:text-gray-800 hover:border-gray-800 hover:font-bold"
+              >
                 {isLoggingIn ? (
                   <div className="flex justify-center">
                     logging in.. <CgSpinner className="animate-spin text-2xl" />
@@ -116,7 +133,7 @@ const PageLogin = ({}) => {
             </form>
             <span className="block text-center text-neutral-700 dark:text-neutral-300">
               New user?{" "}
-              <Link href="/signup" className="font-semibold underline">
+              <Link href="/authentication/signup" className="font-semibold underline">
                 Create an account
               </Link>
             </span>

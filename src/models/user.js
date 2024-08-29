@@ -70,6 +70,8 @@ const userSchema = new mongoose.Schema(
     forgotPasswordTokenExpiry: Date,
     verifyToken: String,
     verifyTokenExpiry: Date,
+    otpToken: Number,
+    otpTokenExpiry: Date,
   },
   { timestamps: true }
 );

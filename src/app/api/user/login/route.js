@@ -1,8 +1,9 @@
 import { connectDb } from "../../../../helper/db";
-import User from "../../../../models/user";
+import Users from "@/models/user";
 import { NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { sendEmail } from "../newauth/route";
 
 connectDb();
 
@@ -10,20 +11,25 @@ export async function POST(request) {
   try {
     const reqBody = await request.json();
     const { email, password } = reqBody;
-    console.log(reqBody);
 
     // Check if user exists
-    const user = await User.findOne({ email });
+
+    const user = await Users.find({ email });
+
     if (!user) {
       return NextResponse.json(
         { error: "Please Enter valid email or password" },
         { status: 400 }
       );
     }
-    console.log("user exists");
+
+    const bool = await user[0].isVerified;
 
     // Check if user is verified
-    if (!user.isVerified) {
+    const temp = user[0];
+
+    if (!temp.isVerified) {
+      console.log(user.isVerified);
       return NextResponse.json(
         { error: "Please verify your email before logging in" },
         { status: 400 }
@@ -31,23 +37,37 @@ export async function POST(request) {
     }
 
     // Check if password is correct
-    const validPassword = await bcryptjs.compare(password, user.password);
+    const validPassword = await bcryptjs.compare(password, temp.password);
+
     if (!validPassword) {
       return NextResponse.json(
         { error: "Invalid email or password" },
         { status: 400 }
       );
     }
-    console.log(user);
+
+    if (temp.role === "Admin") {
+      const response = await sendEmail({
+        email,
+        emailType: "OTP",
+        userId: temp._id,
+      });
+
+      return NextResponse.json(
+        { message: "Verification OTP sent" },
+        { status: 200 }
+      );
+    }
 
     // Create token data
     const tokenData = {
-      id: user._id,
-      name: user.name,
-      email: user.email,
+      id: temp._id,
+      name: temp.name,
+      email: temp.email,
     };
+
     // Create token
-    const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET, {
+    const token = jwt.sign(tokenData, process.env.TOKEN_SECRET, {
       expiresIn: "1d",
     });
 
@@ -60,9 +80,10 @@ export async function POST(request) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
     });
-   
+
     return response;
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
