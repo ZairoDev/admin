@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import { GoPlus } from "react-icons/go";
 import { IoSearchOutline } from "react-icons/io5";
 import { useQuery } from "@tanstack/react-query";
 import PaginationComponent from "@/components/Pagination/pagination";
@@ -8,6 +9,7 @@ import Loader from "@/components/Loader/Loader";
 import ProprtyCard from "@/components/Card/Card";
 import { useRouter } from "next/navigation";
 import debounce from "lodash.debounce";
+import Input from "@/components/Input/Input";
 const fetchProperties = async (
   currentPage,
   limit = 20,
@@ -23,18 +25,19 @@ const fetchProperties = async (
 const AllPropertiesPage = () => {
   const router = useRouter();
 
-  const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    const savedPage = localStorage.getItem("page");
-    if (savedPage) {
-      setCurrentPage(parseInt(savedPage));
+  const [currentPage, setCurrentPage] = useState(() => {
+    const IsServer = typeof window === "undefined";
+    if (!IsServer) {
+      const savedPage = localStorage.getItem("page");
+      if (savedPage) {
+        return parseInt(savedPage);
+      } else {
+        return 1;
+      }
+    } else {
+      return 1;
     }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("page", currentPage.toString());
-  }, [currentPage]);
+  });
 
   const [searchTerm, setSearchTerm] = useState("");
   const [searchType, setSearchType] = useState("VSID");
@@ -50,10 +53,11 @@ const AllPropertiesPage = () => {
   });
 
   useEffect(() => {
-    if (window.localStorage != undefined) {
-      window.localStorage.setItem("page", currentPage);
+    const IsServer = typeof window === "undefined";
+    if (!IsServer) {
+      localStorage.setItem("page", currentPage);
     }
-  });
+  }, [currentPage]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -68,9 +72,9 @@ const AllPropertiesPage = () => {
       }
     );
   };
-
   const handleInputChange = debounce((e) => {
     setSearchTerm(e.target.value);
+    console.log(e.target.value);
   }, 3000);
 
   const handleSearchTypeChange = (e) => {
@@ -113,15 +117,13 @@ const AllPropertiesPage = () => {
               <option value="email">Email</option>
               <option value="phone">Phone</option>
             </select>
-            <div className="relative flex items-center justify-center">
-              <input
-                className="outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
+            <div className=" flex w-full items-center justify-center">
+              <Input
+                className="w-1/2"
                 placeholder={`Search by ${searchType}`}
                 onChange={handleInputChange}
               />
-              <IoSearchOutline className="absolute right-6" />
             </div>
-
             <button
               className="items-center sm:flex hidden text-white dark:text-white justify-center px-6 py-3 darkbg-white bg-PrimaryColor rounded-2xl"
               type="submit"
@@ -139,6 +141,7 @@ const AllPropertiesPage = () => {
           </form>
         </div>
       </div>
+
       {data && data.data.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-items-center">
           {data.data.map((property) => (

@@ -74,8 +74,15 @@ export default function UserTable({ data, currentPage }) {
                 This action cannot be undone.
               </p>
               <div className=" mt-2 w-4/5 flex justify-around">
-                <button className=" px-3 py-2 w-1/3 text-sm rounded-lg dark:text-white font-medium bg-red-700 text-white hover:bg-red-600">Yes, Delete it !</button>
-                <button className=" px-3 py-2 w-1/3 text-sm rounded-lg dark:text-white font-medium border-2 border-gray-700 hover:border hover:border-gray-800" onClick={() => setDeleteClick(false)}>Cancel</button>
+                <button className=" px-3 py-2 w-1/3 text-sm rounded-lg dark:text-white font-medium bg-red-700 text-white hover:bg-red-600">
+                  Yes, Delete it !
+                </button>
+                <button
+                  className=" px-3 py-2 w-1/3 text-sm rounded-lg dark:text-white font-medium border-2 border-gray-700 hover:border hover:border-gray-800"
+                  onClick={() => setDeleteClick(false)}
+                >
+                  Cancel
+                </button>
               </div>
             </div>
           </div>
@@ -161,7 +168,13 @@ export default function UserTable({ data, currentPage }) {
                         </h2>
                       </div>
                     </Link>
-                    <Link href={`/addproperties/${user._id}`}>
+                    <Link href={`/addproperties/${user._id}/${user.email}`}>
+                      {/* <Link
+                      href={{
+                        pathname: `/addproperties/${user._id}`,
+                        query: { email: user.email },
+                      }}
+                    > */}
                       <div className=" flex gap-2 items-center cursor-pointer p-1">
                         <FaPlusCircle className=" text-green-600" />
                         <h2 className=" text-sm text-nowrap font-medium hover:text-gray-600">
