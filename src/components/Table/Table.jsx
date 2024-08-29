@@ -12,6 +12,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { FcCancel } from "react-icons/fc";
 import { HiPencilSquare } from "react-icons/hi2";
 import Link from "next/link";
+import { FaPlusCircle } from "react-icons/fa";
 
 const theme = createTheme({
   palette: {
@@ -112,6 +113,20 @@ export default function UserTable({ data, currentPage }) {
                         <HiPencilSquare className=" text-green-500" />
                         <h2 className=" text-sm text-nowrap font-medium ">
                           Edit details
+                        </h2>
+                      </div>
+                    </Link>
+                    <Link href={`/addproperties/${user._id}/${user.email}`}>
+                      {/* <Link
+                      href={{
+                        pathname: `/addproperties/${user._id}`,
+                        query: { email: user.email },
+                      }}
+                    > */}
+                      <div className=" flex gap-2 items-center cursor-pointer p-1">
+                        <FaPlusCircle className=" text-green-600" />
+                        <h2 className=" text-sm text-nowrap font-medium hover:text-gray-600">
+                          Add Property
                         </h2>
                       </div>
                     </Link>

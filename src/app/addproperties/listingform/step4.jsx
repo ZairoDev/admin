@@ -220,13 +220,15 @@ const Step4 = ({ nextStep, prevStep }) => {
   }, [generalAmenities, otherAmenities, safeAmenities]);
 
   const handleCheckboxChange = (category, item) => {
-    setAmenitiesState((prevState) => ({
-      ...prevState,
-      [category]: {
-        ...prevState[category],
-        [item]: !prevState[category][item],
-      },
-    }));
+    if (item) {
+      setAmenitiesState((prevState) => ({
+        ...prevState,
+        [category]: {
+          ...prevState[category],
+          [item]: !prevState[category][item],
+        },
+      }));
+    }
   };
 
   const handleNext = () => {
@@ -234,16 +236,51 @@ const Step4 = ({ nextStep, prevStep }) => {
   };
 
   return (
-    <div className="mt-4">
-      <div>
-        <h2 className="text-xl font-semibold mb-4">General Amenities</h2>
+    <>
+      <h1>Step 4</h1>
+      <div className="mt-4">
+        <div>
+          <h2 className="text-xl font-semibold mb-4">General Amenities</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {Object.keys(generalAmenities).map((item) => (
+              <label key={item} className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={generalAmenities[item]}
+                  onChange={() =>
+                    handleCheckboxChange("generalAmenities", item)
+                  }
+                  className=" cursor-pointer h-4 text-PrimaryColor w-4 rounded-xl"
+                />
+                <span>{item}</span>
+              </label>
+            ))}
+          </div>
+
+          <h2 className="text-xl font-semibold mt-8 mb-4">Other Amenities</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {Object.keys(otherAmenities).map((item) => (
+              <label key={item} className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={otherAmenities[item]}
+                  onChange={() => handleCheckboxChange("otherAmenities", item)}
+                  className=" cursor-pointer h-4 text-PrimaryColor w-4 rounded-xl"
+                />
+                <span>{item}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <h2 className="text-xl font-semibold mt-8 mb-4">Safe Amenities</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {Object.keys(generalAmenities).map((item) => (
+          {Object.keys(safeAmenities).map((item) => (
             <label key={item} className="flex items-center space-x-2">
               <input
                 type="checkbox"
-                checked={generalAmenities[item]}
-                onChange={() => handleCheckboxChange("generalAmenities", item)}
+                checked={safeAmenities[item]}
+                onChange={() => handleCheckboxChange("safeAmenities", item)}
                 className=" cursor-pointer h-4 text-PrimaryColor w-4 rounded-xl"
               />
               <span>{item}</span>
@@ -251,52 +288,22 @@ const Step4 = ({ nextStep, prevStep }) => {
           ))}
         </div>
 
-        <h2 className="text-xl font-semibold mt-8 mb-4">Other Amenities</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {Object.keys(otherAmenities).map((item) => (
-            <label key={item} className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={otherAmenities[item]}
-                onChange={() => handleCheckboxChange("otherAmenities", item)}
-                className=" cursor-pointer h-4 text-PrimaryColor w-4 rounded-xl"
-              />
-              <span>{item}</span>
-            </label>
-          ))}
+        <div className="flex mb-4 items-center gap-x-4">
+          <button
+            className="max-w-[200px] w-full mt-10 text-white dark:text-white bg-PrimaryColor hover:bg-PrimaryColor/90 focus:ring-4 focus:ring-PrimaryColor/50 font-medium rounded-full text-sm px-5 py-2.5 text-center"
+            onClick={prevStep}
+          >
+            Back
+          </button>
+          <button
+            onClick={handleNext}
+            className="max-w-[200px] w-full mt-10 text-white dark:text-white bg-PrimaryColor hover:bg-PrimaryColor/90 focus:ring-4 focus:ring-PrimaryColor/50 font-medium rounded-full text-sm px-5 py-2.5 text-center"
+          >
+            Next
+          </button>
         </div>
       </div>
-
-      <h2 className="text-xl font-semibold mt-8 mb-4">Safe Amenities</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {Object.keys(safeAmenities).map((item) => (
-          <label key={item} className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={safeAmenities[item]}
-              onChange={() => handleCheckboxChange("safeAmenities", item)}
-              className=" cursor-pointer h-4 text-PrimaryColor w-4 rounded-xl"
-            />
-            <span>{item}</span>
-          </label>
-        ))}
-      </div>
-
-      <div className="flex mb-4 items-center gap-x-4">
-        <button
-          className="max-w-[200px] w-full mt-10 text-white dark:text-white bg-PrimaryColor hover:bg-PrimaryColor/90 focus:ring-4 focus:ring-PrimaryColor/50 font-medium rounded-full text-sm px-5 py-2.5 text-center"
-          onClick={prevStep}
-        >
-          Back
-        </button>
-        <button
-          onClick={handleNext}
-          className="max-w-[200px] w-full mt-10 text-white dark:text-white bg-PrimaryColor hover:bg-PrimaryColor/90 focus:ring-4 focus:ring-PrimaryColor/50 font-medium rounded-full text-sm px-5 py-2.5 text-center"
-        >
-          Next
-        </button>
-      </div>
-    </div>
+    </>
   );
 };
 

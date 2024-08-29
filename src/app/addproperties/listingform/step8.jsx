@@ -21,15 +21,7 @@ export const MONTHS = [
 ];
 
 const Step8 = ({ nextStep, prevStep }) => {
-  console.log("I am working fine...");
-  // let portions = 0;
-  // const data = localStorage.getItem("page1") || "";
-  // if (data) {
-  //   const value = JSON.parse(data)["numberOfPortions"];
-  //   if (value) {
-  //     portions = parseInt(value, 10);
-  //   }
-  // }
+  const [basePriceError, setBasePriceError] = useState(false);
 
   let portions = 0;
   const data = localStorage.getItem("page3") || "";
@@ -199,222 +191,231 @@ const Step8 = ({ nextStep, prevStep }) => {
     nextStep();
   };
 
-  console.log(rentalType);
-
   return (
-    <div className="flex flex-col gap-12">
-      {rentalType && rentalType === "Both" && (
-        <div>
-          <h1 className="text-3xl font-semibold">
-            Select Months for Long Term Pricing
-          </h1>
-          <div className="flex flex-wrap gap-4 mt-4">
-            {MONTHS.map((month, index) => (
-              <div className="flex gap-2 items-center" key={index}>
-                <p
-                  className={`flex items-center gap-1 py-1 px-2 border border-neutral-500 rounded-2xl cursor-pointer ${
-                    monthState[index] &&
-                    "bg-primary-6000 py-1 px-2 rounded-2xl cursor-pointer flex items-center gap-1 border-none"
-                  }`}
-                  onClick={(e) => handleSelectedMonths(e, index)}
-                >
-                  {month}{" "}
-                  {monthState[index] && <MdOutlineCancel className="" />}
-                </p>
+    <>
+      <h1>Step 8</h1>
+      <div className="flex flex-col gap-12">
+        {rentalType && rentalType === "Both" && (
+          <div>
+            <h1 className="text-3xl font-semibold">
+              Select Months for Long Term Pricing
+            </h1>
+            <div className="flex flex-wrap gap-4 mt-4">
+              {MONTHS.map((month, index) => (
+                <div className="flex gap-2 items-center" key={index}>
+                  <p
+                    className={`flex items-center gap-1 py-1 px-2 border border-neutral-500 rounded-2xl cursor-pointer ${
+                      monthState[index] &&
+                      "bg-primary-6000 py-1 px-2 rounded-2xl cursor-pointer flex items-center gap-1 border-none"
+                    }`}
+                    onClick={(e) => handleSelectedMonths(e, index)}
+                  >
+                    {month}{" "}
+                    {monthState[index] && <MdOutlineCancel className="" />}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        {rentalType &&
+          (rentalType === "Short Term" || rentalType === "Both") && (
+            <div>
+              <h1 className="text-3xl font-semibold">Short Term Pricing</h1>
+              <h2 className="flex flex-wrap gap-2">
+                (
+                {MONTHS.filter((m) => !longTermMonths.includes(m)).map(
+                  (month, index) => (
+                    <h2 key={index}> {month}, </h2>
+                  )
+                )}
+                )
+              </h2>
+              {myArray.map((item, index) => (
+                <div key={index} className="mt-8">
+                  <div>
+                    <h2 className="text-2xl font-semibold">
+                      Price for{" "}
+                      {isPortion ? `Portion ${index + 1}` : "Property"}
+                    </h2>
+                    <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
+                      {`The host's revenue is directly dependent on the setting of rates and
+                    regulations on the number of guests, the number of nights, and the
+                    cancellation policy.`}
+                    </span>
+                  </div>
+                  <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
+                  <div className="space-y-8">
+                    <FormItem label="Currency">
+                      <select className="block w-60 outline-none  border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border">
+                        <option value="EURRO">EURO</option>
+                      </select>
+                    </FormItem>
+                    <FormItem label="Base price (Monday -Thursday)">
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <span className="text-gray-500">€</span>
+                        </div>
+                        <Input
+                          className="!pl-8 !pr-10"
+                          placeholder="0.00"
+                          value={basePrice[index]}
+                          onChange={(e) =>
+                            setBasePrice((prevBasePrice) => {
+                              const newBasePrice = [...prevBasePrice];
+                              newBasePrice[index] = parseFloat(e.target.value);
+                              return newBasePrice;
+                            })
+                          }
+                        />
+                      </div>
+                    </FormItem>
+                    <FormItem label="Weekend price (Friday - Sunday)">
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <span className="text-gray-500">€</span>
+                        </div>
+                        <Input
+                          className="!pl-8 !pr-10"
+                          placeholder="0.00"
+                          value={weekendPrice[index]}
+                          onChange={(e) =>
+                            setWeekendPrice((prevWeekendPrice) => {
+                              const newWeekendPrice = [...prevWeekendPrice];
+                              newWeekendPrice[index] = parseFloat(
+                                e.target.value
+                              );
+                              return newWeekendPrice;
+                            })
+                          }
+                        />
+                      </div>
+                    </FormItem>
+                    <FormItem label="Weekly discount">
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <span className="text-gray-500">%</span>
+                        </div>
+                        <Input
+                          className="!pl-8 !pr-10"
+                          placeholder="0.00"
+                          value={weeklyDiscount[index]}
+                          onChange={(e) =>
+                            setWeeklyDiscount((prevWeeklyDiscount) => {
+                              const newWeeklyDiscount = [...prevWeeklyDiscount];
+                              newWeeklyDiscount[index] = parseFloat(
+                                e.target.value
+                              );
+                              return newWeeklyDiscount;
+                            })
+                          }
+                        />
+                      </div>
+                    </FormItem>
+                    <FormItem label="Monthly discount">
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <span className="text-gray-500">%</span>
+                        </div>
+                        <Input
+                          className="!pl-8 !pr-10"
+                          placeholder="0.00"
+                          value={monthlyDiscount[index]}
+                          onChange={(e) =>
+                            setMonthlyDiscount((prevMonthlyDiscount) => {
+                              const newMonthlyDiscount = [
+                                ...prevMonthlyDiscount,
+                              ];
+                              newMonthlyDiscount[index] = parseFloat(
+                                e.target.value
+                              );
+                              return newMonthlyDiscount;
+                            })
+                          }
+                        />
+                      </div>
+                    </FormItem>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+        {rentalType && rentalType === "Long Term" && (
+          <div>
+            <h1 className="text-3xl font-semibold">Long Term Pricing</h1>
+            <h2 className="flex flex-wrap gap-2">
+              (
+              {MONTHS.filter((m) => longTermMonths.includes(m)).map(
+                (month, index) => (
+                  <h2 key={index}> {month}, </h2>
+                )
+              )}
+              )
+            </h2>
+            {myArray.map((item, index) => (
+              <div key={index} className="mt-8">
+                <div>
+                  <h2 className="text-2xl font-semibold">
+                    Price for {isPortion ? `Portion ${index + 1}` : "Property"}
+                  </h2>
+                  <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
+                    {`The host's revenue is directly dependent on the setting of rates and
+                    regulations on the number of guests, the number of nights, and the
+                    cancellation policy.`}
+                  </span>
+                </div>
+                <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
+                <div className="space-y-8">
+                  <FormItem label="Currency">
+                    <select>
+                      <option value="EURRO">EURO</option>
+                    </select>
+                  </FormItem>
+                  <FormItem label="Base price (Long term)">
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span className="text-gray-500">€</span>
+                      </div>
+                      <Input
+                        className="!pl-8 !pr-10"
+                        placeholder="0.00"
+                        value={basePriceLongTerm[index]}
+                        onChange={(e) =>
+                          setBasePriceLongTerm((prevBasePriceLongTerm) => {
+                            const newBasePriceLongTerm = [
+                              ...prevBasePriceLongTerm,
+                            ];
+                            newBasePriceLongTerm[index] = parseFloat(
+                              e.target.value
+                            );
+                            return newBasePriceLongTerm;
+                          })
+                        }
+                      />
+                    </div>
+                  </FormItem>
+                </div>
               </div>
             ))}
           </div>
+        )}
+        <div className="flex mb-4 items-center gap-x-4">
+          <button
+            className="max-w-[200px] w-full mt-10 text-white dark:text-white bg-PrimaryColor hover:bg-PrimaryColor/90 focus:ring-4 focus:ring-PrimaryColor/50 font-medium rounded-full text-sm px-5 py-2.5 text-center"
+            onClick={prevStep}
+          >
+            Back
+          </button>
+          <button
+            onClick={handleNext}
+            className="max-w-[200px] w-full mt-10 text-white dark:text-white bg-PrimaryColor hover:bg-PrimaryColor/90 focus:ring-4 focus:ring-PrimaryColor/50 font-medium rounded-full text-sm px-5 py-2.5 text-center"
+          >
+            Next
+          </button>
         </div>
-      )}
-      {rentalType && (rentalType === "Short Term" || rentalType === "Both") && (
-        <div>
-          <h1 className="text-3xl font-semibold">Short Term Pricing</h1>
-          <h2 className="flex flex-wrap gap-2">
-            (
-            {MONTHS.filter((m) => !longTermMonths.includes(m)).map(
-              (month, index) => (
-                <h2 key={index}> {month}, </h2>
-              )
-            )}
-            )
-          </h2>
-          {myArray.map((item, index) => (
-            <div key={index} className="mt-8">
-              <div>
-                <h2 className="text-2xl font-semibold">
-                  Price for {isPortion ? `Portion ${index + 1}` : "Property"}
-                </h2>
-                <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
-                  {`The host's revenue is directly dependent on the setting of rates and
-                    regulations on the number of guests, the number of nights, and the
-                    cancellation policy.`}
-                </span>
-              </div>
-              <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-              <div className="space-y-8">
-                <FormItem label="Currency">
-                  <select className="block w-60 outline-none  border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border">
-                    <option value="EURRO">EURO</option>
-                  </select>
-                </FormItem>
-                <FormItem label="Base price (Monday -Thursday)">
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span className="text-gray-500">€</span>
-                    </div>
-                    <Input
-                      className="!pl-8 !pr-10"
-                      placeholder="0.00"
-                      value={basePrice[index]}
-                      onChange={(e) =>
-                        setBasePrice((prevBasePrice) => {
-                          const newBasePrice = [...prevBasePrice];
-                          newBasePrice[index] = parseFloat(e.target.value);
-                          return newBasePrice;
-                        })
-                      }
-                    />
-                  </div>
-                </FormItem>
-                <FormItem label="Weekend price (Friday - Sunday)">
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span className="text-gray-500">€</span>
-                    </div>
-                    <Input
-                      className="!pl-8 !pr-10"
-                      placeholder="0.00"
-                      value={weekendPrice[index]}
-                      onChange={(e) =>
-                        setWeekendPrice((prevWeekendPrice) => {
-                          const newWeekendPrice = [...prevWeekendPrice];
-                          newWeekendPrice[index] = parseFloat(e.target.value);
-                          return newWeekendPrice;
-                        })
-                      }
-                    />
-                  </div>
-                </FormItem>
-                <FormItem label="Weekly discount">
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span className="text-gray-500">%</span>
-                    </div>
-                    <Input
-                      className="!pl-8 !pr-10"
-                      placeholder="0.00"
-                      value={weeklyDiscount[index]}
-                      onChange={(e) =>
-                        setWeeklyDiscount((prevWeeklyDiscount) => {
-                          const newWeeklyDiscount = [...prevWeeklyDiscount];
-                          newWeeklyDiscount[index] = parseFloat(e.target.value);
-                          return newWeeklyDiscount;
-                        })
-                      }
-                    />
-                  </div>
-                </FormItem>
-                <FormItem label="Monthly discount">
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span className="text-gray-500">%</span>
-                    </div>
-                    <Input
-                      className="!pl-8 !pr-10"
-                      placeholder="0.00"
-                      value={monthlyDiscount[index]}
-                      onChange={(e) =>
-                        setMonthlyDiscount((prevMonthlyDiscount) => {
-                          const newMonthlyDiscount = [...prevMonthlyDiscount];
-                          newMonthlyDiscount[index] = parseFloat(
-                            e.target.value
-                          );
-                          return newMonthlyDiscount;
-                        })
-                      }
-                    />
-                  </div>
-                </FormItem>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {rentalType && rentalType === "Long Term" && (
-        <div>
-          <h1 className="text-3xl font-semibold">Long Term Pricing</h1>
-          <h2 className="flex flex-wrap gap-2">
-            (
-            {MONTHS.filter((m) => longTermMonths.includes(m)).map(
-              (month, index) => (
-                <h2 key={index}> {month}, </h2>
-              )
-            )}
-            )
-          </h2>
-          {myArray.map((item, index) => (
-            <div key={index} className="mt-8">
-              <div>
-                <h2 className="text-2xl font-semibold">
-                  Price for {isPortion ? `Portion ${index + 1}` : "Property"}
-                </h2>
-                <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
-                  {`The host's revenue is directly dependent on the setting of rates and
-                    regulations on the number of guests, the number of nights, and the
-                    cancellation policy.`}
-                </span>
-              </div>
-              <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-              <div className="space-y-8">
-                <FormItem label="Currency">
-                  <select>
-                    <option value="EURRO">EURO</option>
-                  </select>
-                </FormItem>
-                <FormItem label="Base price (Long term)">
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span className="text-gray-500">€</span>
-                    </div>
-                    <Input
-                      className="!pl-8 !pr-10"
-                      placeholder="0.00"
-                      value={basePriceLongTerm[index]}
-                      onChange={(e) =>
-                        setBasePriceLongTerm((prevBasePriceLongTerm) => {
-                          const newBasePriceLongTerm = [
-                            ...prevBasePriceLongTerm,
-                          ];
-                          newBasePriceLongTerm[index] = parseFloat(
-                            e.target.value
-                          );
-                          return newBasePriceLongTerm;
-                        })
-                      }
-                    />
-                  </div>
-                </FormItem>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-      <div className="flex mb-4 items-center gap-x-4">
-        <button
-          className="max-w-[200px] w-full mt-10 text-white dark:text-white bg-PrimaryColor hover:bg-PrimaryColor/90 focus:ring-4 focus:ring-PrimaryColor/50 font-medium rounded-full text-sm px-5 py-2.5 text-center"
-          onClick={prevStep}
-        >
-          Back
-        </button>
-        <button
-          onClick={handleNext}
-          className="max-w-[200px] w-full mt-10 text-white dark:text-white bg-PrimaryColor hover:bg-PrimaryColor/90 focus:ring-4 focus:ring-PrimaryColor/50 font-medium rounded-full text-sm px-5 py-2.5 text-center"
-        >
-          Next
-        </button>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -109,6 +109,7 @@ const Step5 = ({ nextStep, prevStep }) => {
 
   return (
     <>
+      <h1>Step 5</h1>
       <div className="mt-4">
         <h2 className="text-2xl font-semibold">
           Set house rules for your guests
@@ -185,7 +186,7 @@ const Step5 = ({ nextStep, prevStep }) => {
                   className="text-sm text-red-600 hover:text-red-800 cursor-pointer"
                   onClick={() => handleRemoveRule(index)}
                 >
-                  <CiCircleMinus className="text-2xl"/>
+                  <CiCircleMinus className="text-2xl" />
                 </button>
               </div>
             ))}

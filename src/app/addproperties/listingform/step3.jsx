@@ -9,6 +9,7 @@ import {
 
 const Step3 = ({ nextStep, prevStep }) => {
   const [portions, setPortions] = useState([]);
+  const [errors, setErrors] = useState([]);
   useEffect(() => {
     const data = getFromLocalStorage("page3");
     if (data) {

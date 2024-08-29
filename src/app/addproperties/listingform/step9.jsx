@@ -149,6 +149,7 @@ console.log(rentalType)
 
   return (
     <>
+      <h1>Step 9</h1>
       <div>
         <h2 className="text-2xl font-semibold">How long can guests stay?</h2>
         <span className="block mt-2 text-neutral-500 dark:text-neutral-400">

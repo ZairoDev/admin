@@ -356,6 +356,7 @@ const Step7 = ({ nextStep, prevStep }) => {
   };
   return (
     <>
+      <h1>Step 7</h1>
       <div className="flex flex-col gap-20">
         <div className="space-y-8">
           <div>
@@ -653,7 +654,9 @@ const Step7 = ({ nextStep, prevStep }) => {
                           htmlFor="file-upload-2"
                           className="relative cursor-pointer  rounded-md font-medium text-primary-6000 hover:text-primary-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500"
                         >
-                          <span className="text-sm text-center">Upload a file</span>
+                          <span className="text-sm text-center">
+                            Upload a file
+                          </span>
                           <input
                             id="file-upload-2"
                             name="file-upload-2"

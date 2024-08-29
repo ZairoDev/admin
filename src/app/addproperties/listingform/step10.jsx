@@ -1,12 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { CiEdit } from "react-icons/ci";
+import { CiLocationArrow1 } from "react-icons/ci";
 import { FaHouseUser } from "react-icons/fa";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 
-const Step10 = ({ nextStep, prevStep }) => {
+const Step10 = ({ nextStep, prevStep, id }) => {
+  const router = useRouter();
+  console.log("params page 10 : ", id);
 
+  const [email, setEmail] = useState("");
+  console.log("email page 10 : ", email);
   const clearLocalStorage = () => {
     localStorage.removeItem("page1");
     localStorage.removeItem("page2");
@@ -24,6 +29,21 @@ const Step10 = ({ nextStep, prevStep }) => {
     localStorage.removeItem("isPortionPictures");
     localStorage.removeItem("isPropertyPictures");
   };
+
+  useEffect(() => {
+    const fetchuser = async () => {
+      try {
+        const user = await axios.post("/api/user/profile", { userId: id[0] });
+        if (user) {
+          setEmail(user.data.data.email);
+          console.log("user data", user.data.data.email);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchuser();
+  }, []);
 
   const [propertyCoverFileUrl, setPropertyCoverFileUrl] = useState(() => {
     const savedPage = localStorage.getItem("propertyCoverFileUrl") || "";
@@ -91,22 +111,22 @@ const Step10 = ({ nextStep, prevStep }) => {
         propertyPictureUrls,
         portionCoverFileUrls,
         portionPictureUrls,
-        userId: user?._id,
+        userId: id[0],
       };
       setCombinedData(combinedData);
       return combinedData;
     };
 
     fetchDataFromLocalStorage();
-  }, [user, propertyCoverFileUrl]);
+  }, [propertyCoverFileUrl]);
 
   const [propertyId, setPropertyId] = useState();
-  const [propertyVSID, setPropertyVSID] = useState();
+  const [propertyVSID, setPropertyVSID] = useState("");
 
   const handleGoLive = async () => {
     const data = {
-      userId: user?._id,
-      email: user?.email,
+      userId: id[0],
+      email: email,
       propertyType: combinedData.propertyType,
       placeName: combinedData.placeName,
       rentalForm: combinedData.rentalForm,
@@ -164,26 +184,27 @@ const Step10 = ({ nextStep, prevStep }) => {
 
     try {
       const response = await axios.post("/api/addproperty", data);
-      if (data.userId) {
-        alert.success("Property is successfully live!");
-        clearLocalStorage();
+
+      if (response.data.VSID) {
+        alert("Property live successfully");
       } else {
-        alert.error("User must be logged in to go live");
+        alert("Property live failed");
       }
+      clearLocalStorage();
       setPropertyId(response.data._id);
+      // console.log("Response", response.data.VSID);
       setPropertyVSID(response.data.VSID);
+
+
     } catch (error) {
       alert.error("User must be logged in to go live");
       throw error;
     }
-
-    const handleNext = () => {
-      nextStep();
-    };
   };
 
   return (
     <>
+      <h1>Step 10</h1>
       <div className="flex flex-col gap-12">
         <div>
           <h2 className="text-2xl font-semibold">Congratulations 🎉</h2>
@@ -192,18 +213,14 @@ const Step10 = ({ nextStep, prevStep }) => {
             to be reviewed for publication
           </span>
         </div>
-        <div>
-          <div className="card w-72 border border-gray-600 rounded-xl pb-2">
-            <div className="h-72 flex justify-center items-center overflow-hidden">
-              {propertyCoverFileUrl ? (
-                <img
-                  src={propertyCoverFileUrl}
-                  alt="coverImage"
-                  className="card-img-top rounded-xl object-cover"
-                />
-              ) : (
-                <FaHouseUser className="w-3/4 h-3/4" />
-              )}
+        <div className="border border-PrimaryColor p-2 rounded-2xl w-80">
+          <div className="   rounded-xl pb-2">
+            <div className="  flex justify-center items-center overflow-hidden">
+              <img
+                src={propertyCoverFileUrl || "/dummyimage.png"}
+                alt="coverImage"
+                className="card-img-top rounded-xl object-cover"
+              />
             </div>
             <div className="card-body mt-2 ml-2">
               <h1 className="mt-2">{page3?.portionName?.[0]}</h1>
@@ -215,33 +232,30 @@ const Step10 = ({ nextStep, prevStep }) => {
                 </h6>
               )}
             </div>
-            <hr className="w-16 border-gray-600 border-2 my-2" />
+            {/* <hr className="w-16 border-gray-600 border-2 my-2" /> */}
             <div className="mt-1 font-medium text-xl ml-2">
               {basePrice > 0 && <div>€ {basePrice} /night</div>}
             </div>
           </div>
 
-          <div className="flex mt-8 w-2/5 justify-around items-center">
-            <button
-              href={"/add-listing/1"}
-              className="dark:bg-slate-700 bg-slate-700 text-white"
-            >
-              <CiEdit className="h-3 w-3" />
-              <span className="ml-3 text-sm">Edit</span>
-            </button>
-
+          <div className="flex mt-4  justify-between items-center">
             <div>
               {propertyVSID && (
                 <Link
+                  target="_blank"
                   href={{
-                    pathname: "/listing-stay-detail",
+                    pathname:
+                      "https://www.vacationsaga.com/listing-stay-detail",
                     query: {
                       id: propertyId,
                     },
                   }}
                 >
-                  <button className="-p-4">
-                    <span className="text-sm">Preview</span>
+                  <button
+                    className=" flex gap-x-2 items-center rounded-2xl bg-PrimaryColor text-white dark:text-white  px-4 py-2"
+                  >
+                    Preview
+                    <CiLocationArrow1 className="text-2xl " />
                   </button>
                 </Link>
               )}
@@ -249,29 +263,22 @@ const Step10 = ({ nextStep, prevStep }) => {
 
             <div>
               <button
-                className="dark:bg-primary-6000 dark:text-white text-slate-700 bg-orange-400"
+                className=" flex gap-x-2 items-center rounded-2xl bg-PrimaryColor text-white dark:text-white  px-4 py-2"
                 onClick={handleGoLive}
               >
-                <span className="text-sm">Go Live</span>
+                Go Live
+                <CiLocationArrow1 className="text-2xl " />
               </button>
             </div>
           </div>
         </div>
-        <ToastContainer />
       </div>
-
       <div className="flex mb-4 items-center gap-x-4">
         <button
           className="max-w-[200px] w-full mt-10 text-white dark:text-white bg-PrimaryColor hover:bg-PrimaryColor/90 focus:ring-4 focus:ring-PrimaryColor/50 font-medium rounded-full text-sm px-5 py-2.5 text-center"
           onClick={prevStep}
         >
           Back
-        </button>
-        <button
-          onClick={handleNext}
-          className="max-w-[200px] w-full mt-10 text-white dark:text-white bg-PrimaryColor hover:bg-PrimaryColor/90 focus:ring-4 focus:ring-PrimaryColor/50 font-medium rounded-full text-sm px-5 py-2.5 text-center"
-        >
-          Next
         </button>
       </div>
     </>

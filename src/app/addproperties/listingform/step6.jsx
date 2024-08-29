@@ -54,6 +54,7 @@ const Step6 = ({ nextStep, prevStep }) => {
 
   return (
     <>
+      <h1>Step 6</h1>
       <h2 className="text-2xl my-2 mx-2 font-semibold">
         Write the description that suits the seo
       </h2>
