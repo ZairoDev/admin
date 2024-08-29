@@ -107,7 +107,7 @@ const Step3 = ({ nextStep, prevStep }) => {
             <h3 className="text-lg font-semibold">Portion {index + 1}</h3>
             {/* Remove Portion Button */}
             <button
-              className="bg-PrimaryColor px-4 py-2 text-white items-center text-sm rounded-full flex "
+              className="max-w-[200px] flex items-center  px-5 py-2.5 text-white dark:text-white bg-PrimaryColor hover:bg-PrimaryColor/90 focus:ring-4 focus:ring-PrimaryColor/50 font-medium rounded-full text-sm text-center "
               onClick={() => handleRemovePortion(index)}
             >
               Remove Portion{" "}

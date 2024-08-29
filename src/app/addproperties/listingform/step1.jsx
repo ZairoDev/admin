@@ -49,6 +49,7 @@ const Step1 = ({ nextStep }) => {
 
   const handleSelectCategory = (event) => {
     const value = event.target.value;
+    console.log(value)
     setCotegries(value);
     updateLocalStorage("page1", "category", value);
     console.log(value);
@@ -107,7 +108,7 @@ const Step1 = ({ nextStep }) => {
           </h1>
           <div className="flex items-center justify-between gap-x-3">
             <div className="flex items-center justify-between gap-x-10">
-              {["short-term", "long-term", "both"].map((type) => (
+              {["Short Term", "Long Term", "Both"].map((type) => (
                 <label
                   key={type}
                   className={`block cursor-pointer text-sm border rounded-full px-5 py-2 ${
@@ -124,9 +125,9 @@ const Step1 = ({ nextStep }) => {
                     onChange={handleSelectCategory}
                     className="mr-[2px] hidden invisible cursor-pointer"
                   />
-                  {type === "short-term"
+                  {type === "Short Term"
                     ? "Short Term"
-                    : type === "long-term"
+                    : type === "Long Term"
                     ? "Long Term"
                     : "Both"}
                 </label>
@@ -202,7 +203,7 @@ const Step1 = ({ nextStep }) => {
         </div>
         <button
           onClick={handleNext}
-          className="max-w-[200px] w-full mt-10 text-white dark:text-white bg-PrimaryColor hover:bg-PrimaryColor/90 focus:ring-4 focus:ring-PrimaryColor/50 font-medium rounded-full text-sm px-5 py-2.5 text-center"
+          className="max-w-[200px] mb-4 w-full mt-10 text-white dark:text-white bg-PrimaryColor hover:bg-PrimaryColor/90 focus:ring-4 focus:ring-PrimaryColor/50 font-medium rounded-full text-sm px-5 py-2.5 text-center"
         >
           Next
         </button>

@@ -5,6 +5,7 @@ import {
   getFromLocalStorage,
   updateLocalStorage,
 } from "../../../helper/localStorage";
+
 const Step2 = ({ nextStep, prevStep }) => {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [placeLocation, setplaceLocation] = useState("");
