@@ -19,7 +19,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import LayoutProvider from "@/providers/LayoutProvider";
 import { ReactQueryClientProvider } from "@/components/reactQueryClientProvider";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export const metadata = {
   title: "Admash - Material Design React Nextjs Admin Dashboard Template",
@@ -39,7 +39,7 @@ export default function RootLayout({ children }) {
               <LayoutProvider>{children}</LayoutProvider>
             </ThemeProvider>
           </AppRouterCacheProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </body>
       </html>
     </ReactQueryClientProvider>
