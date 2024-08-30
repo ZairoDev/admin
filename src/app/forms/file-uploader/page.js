@@ -8,9 +8,7 @@ export default function Page() {
       <PageTitle
         pageTitle="File Uploader"
         dashboardUrl="/"
-        dashboardText="Dashboard"
-      />
-
+        dashboardText="Dashboard"/>
       <UploadMultipleFiles />
     </>
   );
