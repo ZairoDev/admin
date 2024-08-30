@@ -36,10 +36,6 @@ const PageLogin = ({}) => {
       if (response?.data?.message === "Verification OTP sent") {
         console.log("here");
         router.push(`/verify-otp/${email}`);
-        // router.push({
-        //   pathname: "/verify-otp",
-        //   query: { email: email },
-        // });
         return;
       }
 
