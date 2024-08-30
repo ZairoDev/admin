@@ -2,6 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+@keyframes check {
+  0% {
+    stroke-dasharray: 0, 50;
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dasharray: 50, 0;
+    stroke-dashoffset: 0;
+  }
+}
+
+.checkmark__check {
+  stroke: #4caf50;
+  stroke-width: 2;
+  animation: check 1.5s ease-in-out 0.5s forwards;
+}
 
 .custom-input {
   display: block;
@@ -1241,6 +1272,4 @@ img {
   position: absolute;
   top: 0px;
   margin-left: 3px;
-}/*# sourceMappingURL=globals.css.map */
-
-
+} /*# sourceMappingURL=globals.css.map */
