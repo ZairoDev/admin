@@ -1,16 +1,27 @@
 import { connectDb } from "@/helper/db";
 import { Property } from "@/models/listing";
 
-
 connectDb();
 
 export async function POST(request) {
   try {
     const reqBody = await request.json();
-    const { propertyId, updatedData } = reqBody;
-    console.log(propertyId, updatedData);
+    const { propertyId, updatedData, userEmail } = reqBody;
+    console.log(userEmail, propertyId, updatedData);
 
-    console.log(updatedData)
+    const {lastUpdatedBy} = {...updatedData};
+    console.log(lastUpdatedBy);
+    if (lastUpdatedBy){
+      lastUpdatedBy.push(userEmail);
+      console.log(lastUpdatedBy);
+      console.log(updatedData);
+      updatedData.lastUpdatedBy = lastUpdatedBy;
+      console.log(updatedData);
+    }else{
+      console.log('else');
+    }
+
+    console.log(updatedData);
     delete updatedData.VSID;
     console.log(updatedData);
 
@@ -22,14 +33,15 @@ export async function POST(request) {
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
-    console.log('here')
+    console.log("here");
     // const pId = new ObjectId(propertyId);
+    console.log(updatedData);
     const property = await Property.findOneAndUpdate(
       { _id: propertyId },
-      { $set: updatedData },
+      { $set: updatedData},
       { new: true }
     );
- 
+
     if (!property) {
       return new Response(JSON.stringify({ message: "Property not found" }), {
         status: 404,

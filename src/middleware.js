@@ -34,6 +34,15 @@ export function middleware(request) {
 // Middleware will run on all routes except for public paths
 export const config = {
   matcher: [
-    "/((?!_next/static|favicon.ico).*)", // Matches all paths except for static files and favicon
+    // "/((?!_next/static|favicon.ico).*)", // Matches all paths except for static files and favicon
+    "/",
+    "/authentication/login",
+    "/authentication/signup",
+    "/users",
+    "/allproperties",
+    "/property/:path*",
+    "/verify-otp/:path*",
+    "/users/editUser/:path*",
+    "/addproperties/:path*"
   ],
 };

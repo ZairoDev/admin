@@ -4,18 +4,36 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { MdArrowDropDown, MdArrowRight } from "react-icons/md";
 import toast, { Toaster } from "react-hot-toast";
+import jwtDecode from "jwt-decode";
+import Cookie from "js-cookie";
+import { getDataFromToken } from "@/helper/getDataFromToken";
 
 const EditPropertyPage = ({ params }) => {
   const router = useRouter();
   const [property, setProperty] = useState(null);
   const [numberOfPortions, setNumberOfPortions] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchLoggedInUser = async () => {
+      try {
+        const response = await axios.post("/api/loggedInUser");
+        console.log(response.data.data);
+        setUser(response.data.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchLoggedInUser();
+  },[]);
 
   const fetchProperty = async () => {
     try {
       const response = await axios.post("/api/getproperty", {
         id: params.id,
       });
+      console.log(response.data);
       setProperty(response.data);
       setNumberOfPortions(response.data.numberOfPortions);
     } catch (error) {
@@ -119,6 +137,9 @@ const EditPropertyPage = ({ params }) => {
         time: property.time,
         datesPerPortion: property.datesPerPortion,
 
+        hostedFrom: property?.hostedFrom,
+        lastUpdatedBy: property?.lastUpdatedBy,
+
         isLive: property.isLive,
       });
     }
@@ -144,6 +165,7 @@ const EditPropertyPage = ({ params }) => {
       await axios.post("/api/editproperties", {
         propertyId: params.id,
         updatedData: formData,
+        userEmail: user?.email,
       });
       toast.success("Property updated successfully");
       setLoading(false);
@@ -736,7 +758,7 @@ const EditPropertyPage = ({ params }) => {
         <div className=" m-4 flex items-center  justify-center">
           <button
             type="submit"
-            className={`flex items-center justify-center w-1/2 py-2 px-6 bg-PrimaryColor text-white rounded-2xl ${
+            className={`dark:text-white flex items-center justify-center w-1/2 py-2 px-6 bg-PrimaryColor text-white rounded-2xl ${
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={loading}
