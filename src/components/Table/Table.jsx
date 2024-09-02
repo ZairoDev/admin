@@ -57,7 +57,7 @@ export default function UserTable({ data, currentPage }) {
     return (
       <>
         <div className=" fixed top-0 right-0 bottom-0 left-0 bg-black/80 bg-opacity-50">
-          <div className=" fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-slate-900  dark:bg-slate-800 p-4 rounded-xl w-1/4 ">
+          <div className=" fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-slate-800 p-4 rounded-xl w-1/4 ">
             <div className=" flex flex-col items-center gap-1">
               <div className=" p-3 bg-red-700 rounded-full">
                 <div className=" p-1 rounded-full bg-red-500">

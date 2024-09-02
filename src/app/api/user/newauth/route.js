@@ -26,7 +26,7 @@ export const sendEmail = async ({ email, emailType, userId, password }) => {
       await Users.findByIdAndUpdate(userId, {
         $set: {
           forgotPasswordToken: hashedToken,
-          forgotPasswordTokenExpiry: new Date(Date.now() + 3600000),
+          forgotPasswordTokenExpiry: new Date(Date.now() + 900000),
         },
       });
     } else if (emailType === "OTP") {
@@ -62,6 +62,7 @@ export const sendEmail = async ({ email, emailType, userId, password }) => {
       html: emailType !== "OTP" ? templateContent : `<p>${otp}</p>`,
     };
     const mailResponse = await transporter.sendMail(mailOptions);
+    console.log(mailResponse);
     return mailResponse;
   } catch (error) {
     console.error("Error sending email:", error);

@@ -95,10 +95,14 @@ const PropertySchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    lastUpdates: {
+      type: [[String]],
+      default: [[]]
+    },
 
     isLive: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   { timestamps: true }

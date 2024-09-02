@@ -55,10 +55,10 @@ const PageSignUp = () => {
       toast.error("Please enter a valid Gmail address");
       return false;
     }
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
-      return false;
-    }
+    // if (password !== confirmPassword) {
+    //   toast.error("Passwords do not match");
+    //   return false;
+    // }
     return true;
   };
 

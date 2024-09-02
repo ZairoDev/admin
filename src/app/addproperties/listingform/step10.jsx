@@ -16,7 +16,6 @@ const Step10 = ({ nextStep, prevStep, id }) => {
     localStorage.removeItem("page1");
     localStorage.removeItem("page2");
     localStorage.removeItem("page3");
-    localStorage.removeItem("page4");
     localStorage.removeItem("page5");
     localStorage.removeItem("page6");
     localStorage.removeItem("page8");
@@ -118,12 +117,13 @@ const Step10 = ({ nextStep, prevStep, id }) => {
     };
 
     fetchDataFromLocalStorage();
-  }, [propertyCoverFileUrl]);
+  }, []);
 
   const [propertyId, setPropertyId] = useState();
   const [propertyVSID, setPropertyVSID] = useState("");
 
   const handleGoLive = async () => {
+    console.log(combinedData.center);
     const data = {
       userId: id[0],
       email: email,

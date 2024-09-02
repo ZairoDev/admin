@@ -88,7 +88,7 @@ const PageLogin = ({}) => {
                 <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
                   Password
                   <Link
-                    href="/forgotpassword"
+                    href="/authentication/forgotpassword"
                     className="font-semibold underline "
                   >
                     Forgot Password
