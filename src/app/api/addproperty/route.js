@@ -5,6 +5,9 @@ import { Property } from "@/models/listing";
 connectDb();
 
 export async function POST(request) {
+
+    const host = request.headers.get("host");
+
     const {
 		userId,
         email,
@@ -101,6 +104,8 @@ export async function POST(request) {
         basePriceLongTerm,
         monthlyDiscountLongTerm,
         longTermMonths,
+
+        hostedFrom: host,
         
 		isLive,
     });

@@ -14,6 +14,8 @@ import PaginationComponent from "@/components/Pagination/pagination";
 import Loader from "@/components/Loader/Loader";
 import axios from "axios";
 import debounce from "lodash.debounce";
+import { FaPlusCircle } from "react-icons/fa";
+import Link from "next/link";
 
 const page = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,9 +31,10 @@ const page = () => {
   };
 
   const fetchAllUsers = async () => {
-
     // const response = await axios.get(`/api/users?limit=${20}&skip=${(currentPage - 1) * 20}&currentPage=${currentPage}`);
-    const response = await axios.get(`/api/users/getAllUsers?currentPage=${currentPage}&queryType=${queryType}&userInput=${userInput}`);
+    const response = await axios.get(
+      `/api/users/getAllUsers?currentPage=${currentPage}&queryType=${queryType}&userInput=${userInput}`
+    );
     const allUsers = response.data.allUsers;
     const totalUsers = response.data.totalUsers;
     return { allUsers, totalUsers };
@@ -42,7 +45,7 @@ const page = () => {
     queryKey: ["users", currentPage, queryType, userInput],
     queryFn: fetchAllUsers,
     staleTime: 1000 * 60 * 5,
-    placeholderData: (previousData, previousQuery) => previousData, 
+    placeholderData: (previousData, previousQuery) => previousData,
   });
 
   const handleInputChange = debounce((e) => {
@@ -53,7 +56,15 @@ const page = () => {
     <div className=" w-full h-screen">
       {/* <div className=" flex-col xl:flex xl:justify-between my-2 lg:justify-between sm:flex-row "> */}
       <div className="sm:flex-row flex-col flex item-center justify-between">
-        <h1 className=" font-medium text-3xl text-DarkColor">Users</h1>
+        <div className=" flex gap-4 items-center">
+          <h1 className=" font-medium text-3xl text-DarkColor">Users</h1>
+          <Link href="/authentication/signup">
+            <div className=" bg-PrimaryColor p-2 flex text-white gap-2 rounded-xl items-center">
+              <FaPlusCircle className=" text-white" />
+              Add User
+            </div>
+          </Link>
+        </div>
         <div className=" flex gap-4 items-center">
           <div>
             <select

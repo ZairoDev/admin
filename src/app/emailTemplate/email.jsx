@@ -807,7 +807,7 @@ return `
                                                     <table cellspacing="0" cellpadding="0" style="margin-top:  20px; margin-bottom: 20px;">
                                                     <tr>
                                                        <td align="center" width="300" height="40" bgcolor="#FF9800" style="border-radius: 5px;">
-                                                      <a href="${process.env.NEXT_PUBLIC_URL}/resetpassword?token=${hashedToken}" 
+                                                      <a href="${process.env.NEXT_PUBLIC_URL}/authentication/resetpassword?token=${hashedToken}" 
                                                       target="_blank" 
                                                       style="font-size: 16px; font-family: Arial, sans-serif; color: #ffffff; text-decoration: none; padding: 10px 20px; border-radius: 5px; border: 1px solid #FF9800; display: inline-block;">
                                                       Reset Your Password

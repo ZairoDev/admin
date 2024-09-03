@@ -14,8 +14,8 @@ import Step10 from "../listingform/step10";
 const ListingForm = ({params}) => {
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 10;
-  console.log(params.id);
-  console.log(params.email)
+  console.log("params: ", params.id);
+  console.log("params: ", params.email)
   const nextStep = () => {
     if (currentStep < totalSteps) {
       setCurrentStep((prevStep) => prevStep + 1);

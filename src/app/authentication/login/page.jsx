@@ -36,10 +36,6 @@ const PageLogin = ({}) => {
       if (response?.data?.message === "Verification OTP sent") {
         console.log("here");
         router.push(`/verify-otp/${email}`);
-        // router.push({
-        //   pathname: "/verify-otp",
-        //   query: { email: email },
-        // });
         return;
       }
 
@@ -92,7 +88,7 @@ const PageLogin = ({}) => {
                 <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
                   Password
                   <Link
-                    href="/forgotpassword"
+                    href="/authentication/forgotpassword"
                     className="font-semibold underline "
                   >
                     Forgot Password

@@ -1,63 +1,16 @@
-// // NEXTAUTH: --> Authentication Middleware goes here
-
-// import { NextRequest, NextResponse } from "next/server";
-
-// export function middleware(request) {
-//   const path = request.nextUrl.pathname;
-
-//   const otpPath = /^\/verify-otp\/.+$/.test(path);
-//   console.log("otp path check: ",otpPath);
-
-//   const isPublicPath =
-//     path === "/authentication/login/" ||
-//     path === "/authentication/signup/" ||
-//     path === "/verify-otp/" ||
-//     otpPath;
-
-//   const token = request.cookies.get("token")?.value || "";
-//   console.log("token from middleware: ", token, path);
-
-//   console.log(isPublicPath);
-
-
-//   if (isPublicPath && token) {
-// 		console.log(isPublicPath, token);
-//     return NextResponse.redirect(new URL("/", request.url));
-//   }
-
-//   if (!isPublicPath && !token) {
-//     return NextResponse.redirect(new URL("/authentication/login", request.url));
-//   }
-
-//   return NextResponse.next();
-// }
-
-// // Middleware will run on these routes
-// export const config = {
-//   matcher: [
-//     "/",
-// 		"/users",
-// 		"/allproperties",
-//     "/authentication/login/",
-//     "/authentication/signup/",
-//     "/verify-otp/:path*",
-//   ],
-// };
-
-// Above code work fine but have to add route for making them lock 
-
-
-
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request) {
   const path = request.nextUrl.pathname;
 
+  const otpPath = /^\/verify-otp\/.+$/.test(path);
+  console.log("otp path check: ",otpPath);
   // Define public paths that don't require authentication
   const isPublicPath =
     path === "/authentication/login/" ||
     path === "/authentication/signup/" ||
-    path.startsWith("/verify-otp/");
+    path === "/verify-otp/" ||
+    otpPath;
 
   // Retrieve the authentication token from cookies
   const token = request.cookies.get("token")?.value || "";
@@ -81,6 +34,15 @@ export function middleware(request) {
 // Middleware will run on all routes except for public paths
 export const config = {
   matcher: [
-    "/((?!_next/static|favicon.ico).*)", // Matches all paths except for static files and favicon
+    // "/((?!_next/static|favicon.ico).*)", // Matches all paths except for static files and favicon
+    "/",
+    "/authentication/login",
+    "/authentication/signup",
+    "/users",
+    "/allproperties",
+    "/property/:path*",
+    "/verify-otp/:path*",
+    "/users/editUser/:path*",
+    "/addproperties/:path*"
   ],
 };

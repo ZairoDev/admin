@@ -4,18 +4,41 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { MdArrowDropDown, MdArrowRight } from "react-icons/md";
 import toast, { Toaster } from "react-hot-toast";
+import jwtDecode from "jwt-decode";
+import Cookie from "js-cookie";
+import { getDataFromToken } from "@/helper/getDataFromToken";
 
 const EditPropertyPage = ({ params }) => {
   const router = useRouter();
   const [property, setProperty] = useState(null);
   const [numberOfPortions, setNumberOfPortions] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(null);
+  const [changeModalState, setChangeModalState] = useState(false);
+  const [updates, setUpdates] = useState([]);
+  const [checked, setChecked] = useState(false);
 
+  // ! Fetching Logged in user
+  useEffect(() => {
+    const fetchLoggedInUser = async () => {
+      try {
+        const response = await axios.post("/api/loggedInUser");
+        console.log(response.data.data);
+        setUser(response.data.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchLoggedInUser();
+  }, []);
+
+  // ! Fetching details of property
   const fetchProperty = async () => {
     try {
       const response = await axios.post("/api/getproperty", {
         id: params.id,
       });
+      console.log(response.data);
       setProperty(response.data);
       setNumberOfPortions(response.data.numberOfPortions);
     } catch (error) {
@@ -25,6 +48,7 @@ const EditPropertyPage = ({ params }) => {
     }
   };
 
+  // ! Setting prefilled values in input fields
   const [formData, setFormData] = useState({
     VSID: property?.VSID,
     rentalType: property?.rentalType,
@@ -74,6 +98,8 @@ const EditPropertyPage = ({ params }) => {
     time: property?.time,
     datesPerPortion: property?.datesPerPortion,
 
+    lastUpdates: property?.updates,
+
     isLive: property?.isLive,
   });
 
@@ -119,6 +145,10 @@ const EditPropertyPage = ({ params }) => {
         time: property.time,
         datesPerPortion: property.datesPerPortion,
 
+        hostedFrom: property?.hostedFrom,
+        lastUpdatedBy: property?.lastUpdatedBy,
+        lastUpdates: property?.lastUpdates,
+
         isLive: property.isLive,
       });
     }
@@ -139,17 +169,25 @@ const EditPropertyPage = ({ params }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       setLoading(true);
+
+      const newObj = { ...formData };
+      if (updates.length >= 1) {
+        newObj.lastUpdates = [...newObj.lastUpdates, updates];
+      }
+
+      console.log(updates);
       await axios.post("/api/editproperties", {
         propertyId: params.id,
-        updatedData: formData,
+        updatedData: newObj,
+        userEmail: user?.email,
       });
       toast.success("Property updated successfully");
+      setChangeModalState(false);
       setLoading(false);
-      // setTimeout(() => {
-      //   router.push("/allproperties");
-      // }, 2000);
+      router.push('/allproperties');
     } catch (error) {
       console.error("Error updating property:", error);
       setLoading(false);
@@ -159,6 +197,117 @@ const EditPropertyPage = ({ params }) => {
   const [isPortionOpen, setIsPortionOpen] = useState(() =>
     Array.from({ length: numberOfPortions }, () => false)
   );
+
+  const editableFields = [
+    "PropertyType",
+    "PlaceName",
+    "RentalType",
+    "PostalCode",
+    "City",
+    "State",
+    "Country",
+    "Street",
+    "Rules",
+    "Live",
+  ];
+
+  const handleSelectCheckbox = (e) => {
+
+    const fieldName = e.target.name;
+
+    if (updates.includes(fieldName)) {
+      const index = updates.indexOf(fieldName);
+      const newArray = [...updates];
+
+      newArray.splice(index, 1);
+
+      setUpdates(newArray);
+
+      if (newArray.length >= 1) {
+        setChecked(true);
+      } else {
+        setChecked(false);
+      }
+
+    } else {
+
+      const newArray = [...updates];
+      newArray.push(fieldName);
+
+      setUpdates(newArray);
+
+      if (newArray.length >= 1) {
+        setChecked(true);
+      } else {
+        setChecked(false);
+      }
+    }
+  };
+
+  const changesModal = () => {
+    return (
+      <>
+        <div className=" fixed top-0 right-0 bottom-0 left-0 bg-black/80 bg-opacity-50 z-50">
+          <div className=" fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-slate-800 rounded-xl dark:bg-slate-800">
+            <div className="flex flex-wrap max-w-lg p-2">
+              <h2 className=" w-full text-xl font-medium underline p-2">
+                Changes in Property
+              </h2>
+              {editableFields.map((field) => (
+                <div className=" flex gap-4 p-2 w-1/3" key={field}>
+                  <label htmlFor={field} className=" w-4/5">
+                    {field}
+                  </label>
+                  <div className=" w-1/5">
+                    {" "}
+                    <input
+                      type="checkbox"
+                      name={field}
+                      onChange={(e) => handleSelectCheckbox(e)}
+                      className=" cursor-pointer w-4 h-4 border border-neutral-700"
+                    />
+                  </div>
+                </div>
+              ))}
+              <h2 className=" w-full text-xl font-medium underline p-2">
+                Changes in portion
+              </h2>
+              {Array.from({ length: numberOfPortions }).map((_, index) => (
+                <div className=" flex gap-2 p-2 w-1/3" key={index}>
+                  <label htmlFor={index} className=" w-4/5">
+                    Portion{index + 1}
+                  </label>
+                  <div className=" w-1/5">
+                    <input
+                      type="checkbox"
+                      name={`Portion${index + 1}`}
+                      onChange={(e) => handleSelectCheckbox(e)}
+                      className=" cursor-pointer w-4 h-4 border border-neutral-700"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className=" flex justify-between items-center">
+              <button
+                disabled={!checked}
+                onClick={handleSubmit}
+                className=" disabled:opacity-50 disabled:cursor-not-allowed bg-PrimaryColor p-2 rounded-xl w-1/3 my-4 mx-auto text-white dark:text-white hover:font-medium hover:bg-TextColor"
+              >
+                Submit
+              </button>
+              <button
+                onClick={() => setChangeModalState(false)}
+                className=" bg-PrimaryColor p-2 rounded-xl w-1/3 my-4 mx-auto text-white dark:text-white hover:font-medium hover:bg-TextColor"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  };
 
   return (
     <div className="max-w-5xl mx-auto p-2 ">
@@ -734,17 +883,24 @@ const EditPropertyPage = ({ params }) => {
           })}
         </div>
         <div className=" m-4 flex items-center  justify-center">
-          <button
+          {/* <button
             type="submit"
-            className={`flex items-center justify-center w-1/2 py-2 px-6 bg-PrimaryColor text-white rounded-2xl ${
+            className={`dark:text-white flex items-center justify-center w-1/2 py-2 px-6 bg-PrimaryColor text-white rounded-2xl ${
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={loading}
           >
             {loading ? "Updating..." : "Save Changes"}
-          </button>
+          </button> */}
+          <div
+            onClick={() => setChangeModalState(true)}
+            className=" border-2 border-neutral-700 p-2 cursor-pointer"
+          >
+            click to save
+          </div>
         </div>
       </form>
+      {changeModalState && changesModal()}
     </div>
   );
 };

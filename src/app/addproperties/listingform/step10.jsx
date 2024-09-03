@@ -19,7 +19,6 @@ const Step10 = ({ nextStep, prevStep, id }) => {
     localStorage.removeItem("page1");
     localStorage.removeItem("page2");
     localStorage.removeItem("page3");
-    localStorage.removeItem("page4");
     localStorage.removeItem("page5");
     localStorage.removeItem("page6");
     localStorage.removeItem("page8");
@@ -38,8 +37,8 @@ const Step10 = ({ nextStep, prevStep, id }) => {
       try {
         const user = await axios.post("/api/user/profile", { userId: id[0] });
         if (user) {
-          setEmail(user.data.data.email);
           console.log("user data", user.data.data.email);
+          setEmail(user.data.data.email);
         }
       } catch (error) {
         console.log(error);
@@ -121,12 +120,13 @@ const Step10 = ({ nextStep, prevStep, id }) => {
     };
 
     fetchDataFromLocalStorage();
-  }, [propertyCoverFileUrl]);
+  }, []);
 
   const [propertyId, setPropertyId] = useState();
   const [propertyVSID, setPropertyVSID] = useState("");
 
   const handleGoLive = async () => {
+    console.log(combinedData.center);
     const data = {
       userId: id[0],
       email: email,
@@ -275,7 +275,7 @@ const Step10 = ({ nextStep, prevStep, id }) => {
               <button
                 className=" flex gap-x-2 items-center rounded-2xl bg-PrimaryColor text-white dark:text-white  px-4 py-2"
                 onClick={handleGoLive}
-                disabled={propertyLive}
+                disabled={!email}
               >
                 Go Live
                 <CiLocationArrow1 className="text-2xl " />

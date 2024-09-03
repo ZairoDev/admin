@@ -120,7 +120,9 @@ const PageSignUp = () => {
       // router.push("/login")
     } catch (error) {
       console.error("Signup failed:", error);
-      toast.error("Signup failed. Please try again.");
+      // toast.error("Signup failed. Please try again.");
+      console.log(error.response.data.error);
+      toast.error(error.response.data.error);
     } finally {
       setLoading(false);
     }

@@ -19,16 +19,29 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import Logout from "@mui/icons-material/Logout";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const Profile = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const router = useRouter();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleLogout = async () => {
+    try{
+      const response = await axios.get("/api/user/logout");
+      router.push('/authentication/login');
+    }catch(err){
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <Tooltip title="Account settings">
@@ -184,14 +197,14 @@ const Profile = () => {
             <Logout fontSize="small" />
           </ListItemIcon>
 
-          <Link
+          {/* <Link
             href="/authentication/logout/"
             fontSize="13px"
             color="inherit"
             underline="none"
-          >
-            Logout
-          </Link>
+          > */}
+          <div onClick={handleLogout}>Logout</div>
+          {/* </Link> */}
         </MenuItem>
       </Menu>
     </>
