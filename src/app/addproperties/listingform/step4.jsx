@@ -13,15 +13,14 @@ const Step4 = ({ nextStep, prevStep }) => {
     return value || { key1: {}, key2: {}, key3: {} };
   });
 
-
   useEffect(() => {
     // console.log(amenitiesState);
     console.log(amenitiesState);
-  }, [amenitiesState])
+  }, [amenitiesState]);
 
   const generalAmenities = useMemo(
     () => ({
-      //   Wifi: amenitiesState?.generalAmenities?.Wifi || false,
+        Wifi: amenitiesState?.generalAmenities?.Wifi || false,
       Internet: amenitiesState?.generalAmenities?.Internet || false,
       TV: amenitiesState?.generalAmenities?.TV || false,
       "Air conditioning":
@@ -222,23 +221,25 @@ const Step4 = ({ nextStep, prevStep }) => {
     generalAmenities,
     otherAmenities,
     safeAmenities,
-  }
+  };
   const [amenities, setAmenities] = useState(initialState);
-
-
 
   useEffect(() => {
     const newObj = {
       generalAmenities,
       otherAmenities,
       safeAmenities,
-    }
+    };
     localStorage.setItem(
       "page4",
-      // JSON.stringify({ amenitiesgeneralAmenities, otherAmenities, safeAmenities })
+
       JSON.stringify(newObj)
     );
-  }, [amenities.generalAmenities, amenities.otherAmenities, amenities.safeAmenities]);
+  }, [
+    amenities.generalAmenities,
+    amenities.otherAmenities,
+    amenities.safeAmenities,
+  ]);
 
   const handleCheckboxChange = (category, item) => {
     if (item) {

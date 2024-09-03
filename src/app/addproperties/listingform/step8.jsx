@@ -22,10 +22,8 @@ export const MONTHS = [
 
 const Step8 = ({ nextStep, prevStep }) => {
   const [basePriceError, setBasePriceError] = useState(false);
-
   let portions = 0;
   const data = localStorage.getItem("page3") || "";
-
   if (data) {
     const temp = JSON.parse(data);
     const value = temp["portions"].length;
@@ -33,7 +31,6 @@ const Step8 = ({ nextStep, prevStep }) => {
       portions = parseInt(value, 10);
     }
   }
-
   const [rentalType, setRentalType] = useState(() => {
     const savedRentalType = localStorage.getItem("page1");
     if (!savedRentalType) {
@@ -368,7 +365,7 @@ const Step8 = ({ nextStep, prevStep }) => {
                 <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
                 <div className="space-y-8">
                   <FormItem label="Currency">
-                    <select>
+                    <select className="block w-60 outline-none  border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border">
                       <option value="EURRO">EURO</option>
                     </select>
                   </FormItem>
