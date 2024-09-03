@@ -1,15 +1,14 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { GoPlus } from "react-icons/go";
 import { IoSearchOutline } from "react-icons/io5";
 import { useQuery } from "@tanstack/react-query";
 import PaginationComponent from "@/components/Pagination/pagination";
-import Loader from "@/components/Loader/Loader";
 import ProprtyCard from "@/components/Card/Card";
 import { useRouter } from "next/navigation";
 import debounce from "lodash.debounce";
 import Input from "@/components/Input/Input";
+import CardSkelton from "@/components/Skelton/CardSkelton";
 const fetchProperties = async (
   currentPage,
   limit = 20,
@@ -47,7 +46,7 @@ const AllPropertiesPage = () => {
   );
 
   const { data, error, isLoading, isPending, isError, isSuccess } = useQuery({
-    queryKey: ["allProperties", currentPage, searchTerm, searchType],
+    queryKey: ["allProperties", currentPage, searchTerm],
     queryFn: () => fetchProperties(currentPage, 20, searchTerm, searchType),
     staleTime: 1000 * 60 * 5,
   });
@@ -95,7 +94,16 @@ const AllPropertiesPage = () => {
   if (isLoading)
     return (
       <div>
-        <Loader />
+        <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <CardSkelton />
+            <CardSkelton />
+            <CardSkelton />
+            <CardSkelton />
+            <CardSkelton />
+            <CardSkelton />
+          </div>
+        </div>
       </div>
     );
   if (error) return `Error fetching properties: ${error.message}`;
@@ -106,7 +114,7 @@ const AllPropertiesPage = () => {
         <div className="flex items-center justify-between sm:justify-normal">
           <form
             onSubmit={handleSearch}
-            className="mb-4 flex items-center gap-x-2"
+            className="mb-4 w-full flex items-center gap-x-2"
           >
             <select
               value={searchType}
@@ -119,17 +127,18 @@ const AllPropertiesPage = () => {
             </select>
             <div className=" flex w-full items-center justify-center">
               <Input
-                className="w-1/2"
+                className="w-full"
                 placeholder={`Search by ${searchType}`}
                 onChange={handleInputChange}
               />
             </div>
             <button
+              onClick={() => setSearchTerm("")}
               className="items-center sm:flex hidden text-white dark:text-white justify-center px-6 py-3 darkbg-white bg-PrimaryColor rounded-2xl"
               type="submit"
               variant="outlined"
             >
-              Search
+              Clear
             </button>
             <button
               className="flex sm:hidden items-center text-white dark:text-white justify-center px-6 py-3 darkbg-white bg-PrimaryColor rounded-2xl"
@@ -178,3 +187,5 @@ const AllPropertiesPage = () => {
 };
 
 export default AllPropertiesPage;
+
+// TODO : Above code is working fine
