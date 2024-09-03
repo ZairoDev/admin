@@ -47,7 +47,6 @@ export async function POST(request) {
       gender == null ||
       nationality == null ||
       spokenLanguage == null ||
-      bankDetails == null ||
       address == null
     ) {
       return NextResponse.json(

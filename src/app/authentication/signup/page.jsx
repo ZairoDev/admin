@@ -116,7 +116,7 @@ const PageSignUp = () => {
       setBankDetails("");
       setSpokenLanguage("");
       setGender("");
-      setProfilePic('')
+      setProfilePic("");
       // router.push("/login")
     } catch (error) {
       console.error("Signup failed:", error);
@@ -194,7 +194,7 @@ const PageSignUp = () => {
             <form className="grid grid-cols-1 gap-6 " onSubmit={onSignup}>
               <label htmlFor="file-upload">
                 <div className="lg:w-36 lg:h-36 md:w-28 md:h-28 w-20 h-20 rounded-full border border-gray-500 flex justify-center items-center mx-auto cursor-pointer hover:opacity-60 ">
-                  {((!previewImage || !profilePic) && !profilePicLoading) && (
+                  {(!previewImage || !profilePic) && !profilePicLoading && (
                     <span>
                       {" "}
                       <LuImagePlus className=" opacity-70 text-3xl cursor-pointer" />
@@ -351,7 +351,6 @@ const PageSignUp = () => {
                   className="block w-full border-gray-600 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border "
                   value={bankDetails}
                   onChange={(e) => setBankDetails(e.target.value)}
-                  required
                 />
               </label>
 
