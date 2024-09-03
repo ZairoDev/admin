@@ -13,9 +13,14 @@ const Step4 = ({ nextStep, prevStep }) => {
     return value || { key1: {}, key2: {}, key3: {} };
   });
 
+  useEffect(() => {
+    // console.log(amenitiesState);
+    console.log(amenitiesState);
+  }, [amenitiesState]);
+
   const generalAmenities = useMemo(
     () => ({
-      //   Wifi: amenitiesState?.generalAmenities?.Wifi || false,
+        Wifi: amenitiesState?.generalAmenities?.Wifi || false,
       Internet: amenitiesState?.generalAmenities?.Internet || false,
       TV: amenitiesState?.generalAmenities?.TV || false,
       "Air conditioning":
@@ -212,16 +217,34 @@ const Step4 = ({ nextStep, prevStep }) => {
     [savedAmenities]
   );
 
+  const initialState = {
+    generalAmenities,
+    otherAmenities,
+    safeAmenities,
+  };
+  const [amenities, setAmenities] = useState(initialState);
+
   useEffect(() => {
+    const newObj = {
+      generalAmenities,
+      otherAmenities,
+      safeAmenities,
+    };
     localStorage.setItem(
       "page4",
-      JSON.stringify({ generalAmenities, otherAmenities, safeAmenities })
+
+      JSON.stringify(newObj)
     );
-  }, [generalAmenities, otherAmenities, safeAmenities]);
+  }, [
+    amenities.generalAmenities,
+    amenities.otherAmenities,
+    amenities.safeAmenities,
+  ]);
 
   const handleCheckboxChange = (category, item) => {
     if (item) {
-      setAmenitiesState((prevState) => ({
+      console.log(category, item);
+      setAmenities((prevState) => ({
         ...prevState,
         [category]: {
           ...prevState[category],
@@ -230,6 +253,10 @@ const Step4 = ({ nextStep, prevStep }) => {
       }));
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem("page4", JSON.stringify(amenities));
+  }, [amenities]);
 
   const handleNext = () => {
     nextStep();
@@ -242,11 +269,11 @@ const Step4 = ({ nextStep, prevStep }) => {
         <div>
           <h2 className="text-xl font-semibold mb-4">General Amenities</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {Object.keys(generalAmenities).map((item) => (
+            {Object.keys(amenities.generalAmenities).map((item) => (
               <label key={item} className="flex items-center space-x-2">
                 <input
                   type="checkbox"
-                  checked={generalAmenities[item]}
+                  checked={amenities.generalAmenities[item]}
                   onChange={() =>
                     handleCheckboxChange("generalAmenities", item)
                   }
@@ -259,11 +286,11 @@ const Step4 = ({ nextStep, prevStep }) => {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">Other Amenities</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {Object.keys(otherAmenities).map((item) => (
+            {Object.keys(amenities.otherAmenities).map((item) => (
               <label key={item} className="flex items-center space-x-2">
                 <input
                   type="checkbox"
-                  checked={otherAmenities[item]}
+                  checked={amenities.otherAmenities[item]}
                   onChange={() => handleCheckboxChange("otherAmenities", item)}
                   className=" cursor-pointer h-4 text-PrimaryColor w-4 rounded-xl"
                 />
@@ -275,11 +302,11 @@ const Step4 = ({ nextStep, prevStep }) => {
 
         <h2 className="text-xl font-semibold mt-8 mb-4">Safe Amenities</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {Object.keys(safeAmenities).map((item) => (
+          {Object.keys(amenities.safeAmenities).map((item) => (
             <label key={item} className="flex items-center space-x-2">
               <input
                 type="checkbox"
-                checked={safeAmenities[item]}
+                checked={amenities.safeAmenities[item]}
                 onChange={() => handleCheckboxChange("safeAmenities", item)}
                 className=" cursor-pointer h-4 text-PrimaryColor w-4 rounded-xl"
               />

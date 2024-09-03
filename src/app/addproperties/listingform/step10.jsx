@@ -5,13 +5,16 @@ import { FaHouseUser } from "react-icons/fa";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import CheckAnimation from "@/components/ChelAnimation/CheckAnimation";
 
 const Step10 = ({ nextStep, prevStep, id }) => {
   const router = useRouter();
   console.log("params page 10 : ", id);
 
   const [email, setEmail] = useState("");
-  console.log("email page 10 : ", email);
+
+  const [propertyLive, setPropertyLive] = useState();
+
   const clearLocalStorage = () => {
     localStorage.removeItem("page1");
     localStorage.removeItem("page2");
@@ -186,7 +189,7 @@ const Step10 = ({ nextStep, prevStep, id }) => {
       const response = await axios.post("/api/addproperty", data);
 
       if (response.data.VSID) {
-        alert("Property live successfully");
+        setPropertyLive(true);
       } else {
         alert("Property live failed");
       }
@@ -194,8 +197,6 @@ const Step10 = ({ nextStep, prevStep, id }) => {
       setPropertyId(response.data._id);
       // console.log("Response", response.data.VSID);
       setPropertyVSID(response.data.VSID);
-
-
     } catch (error) {
       alert.error("User must be logged in to go live");
       throw error;
@@ -251,15 +252,24 @@ const Step10 = ({ nextStep, prevStep, id }) => {
                     },
                   }}
                 >
-                  <button
-                    className=" flex gap-x-2 items-center rounded-2xl bg-PrimaryColor text-white dark:text-white  px-4 py-2"
-                  >
+                  <button className=" flex gap-x-2 items-center rounded-2xl bg-PrimaryColor text-white dark:text-white  px-4 py-2">
                     Preview
                     <CiLocationArrow1 className="text-2xl " />
                   </button>
                 </Link>
               )}
             </div>
+
+            {propertyLive ? (
+              <>
+                <CheckAnimation
+                  message="Your property is now live!"
+                  show={propertyLive}
+                />
+              </>
+            ) : (
+              <></>
+            )}
 
             <div>
               <button

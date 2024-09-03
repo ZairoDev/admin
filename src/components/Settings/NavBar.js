@@ -10,7 +10,7 @@ const NavBar = () => {
 
   return (
     <>
-      <nav className={styles.topNavStyle}>
+      {/* <nav className={styles.topNavStyle}>
         <ul>
           <li className={pathname == "/settings/account/" ? styles.active : ""}>
             <Link href="/settings/account/">Account</Link>
@@ -18,7 +18,7 @@ const NavBar = () => {
           <li className={pathname == "/settings/security/" ? styles.active : ""}>
             <Link href="/settings/security/">Security</Link>
           </li>
-          <li
+          <li`
             className={
               pathname == "/settings/privacy-policy/" ? styles.active : ""
             }
@@ -26,7 +26,7 @@ const NavBar = () => {
             <Link href="/settings/privacy-policy/">Privacy Policy</Link>
           </li>
         </ul>
-      </nav>
+      </nav> */}
     </>
   );
 };
