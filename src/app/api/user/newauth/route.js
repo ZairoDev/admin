@@ -7,7 +7,6 @@ import {
 } from "@/app/emailTemplate/email";
 import { NextResponse } from "next/server";
 
-
 export const sendEmail = async ({ email, emailType, userId, password }) => {
   let otp = 999999;
   try {
@@ -36,7 +35,7 @@ export const sendEmail = async ({ email, emailType, userId, password }) => {
           otpToken: otp,
           otpTokenExpiry: new Date(Date.now() + 300000),
         },
-      })
+      });
     }
 
     let transporter = nodemailer.createTransport({
@@ -58,7 +57,11 @@ export const sendEmail = async ({ email, emailType, userId, password }) => {
       from: "No Reply <no-reply@vacationsaga.com>",
       to: email,
       subject:
-        emailType === "VERIFY" ? "Verify your email" : "Reset Your Password",
+        emailType === "VERIFY"
+          ? "Verify your email"
+          : emailType === "RESET"
+          ? "Reset Password"
+          : "SuperAdmin Login OTP",
       html: emailType !== "OTP" ? templateContent : `<p>${otp}</p>`,
     };
     const mailResponse = await transporter.sendMail(mailOptions);

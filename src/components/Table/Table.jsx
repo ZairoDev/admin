@@ -91,6 +91,41 @@ export default function UserTable({ data, currentPage }) {
     );
   };
 
+  const [copiedId, setCopiedId] = React.useState(
+    Array.from({ length: data.length }, () => false)
+  );
+  const [copiedEmail, setCopiedEmail] = React.useState(
+    Array.from({ length: data.length }, () => false)
+  );
+  const handleCopiedToClipboard = (name, index) => {
+
+    const newState = Array.from({ length: data.length }, () => false);
+    newState[index] = true;
+
+    if (name === "id") setCopiedId(newState);
+    else setCopiedEmail(newState);
+    
+    setTimeout(() => {
+      const newState = Array.from({ length: data.length }, () => false);
+      setCopiedId(newState);
+      setCopiedEmail(newState);
+    }, 1000);
+
+  };
+  const clickToCopy = (name, index) => {
+    if (name === "id") {
+      navigator.clipboard
+        .writeText(data[index]._id)
+        .then(() => handleCopiedToClipboard("id", index))
+        .catch();
+    } else if (name === "email") {
+      navigator.clipboard
+        .writeText(data[index].email)
+        .then(() => handleCopiedToClipboard("email", index))
+        .catch();
+    }
+  };
+
   return (
     // <TableContainer component={Paper}>
     <table className={`w-full h-screen mt-4`}>
@@ -131,8 +166,35 @@ export default function UserTable({ data, currentPage }) {
             <td component="th" scope="row" align="center">
               {user.name}
             </td>
-            <td align="center">{user.email}</td>
-            <td align="center">{user._id}</td>
+            <td
+              align="center"
+              className=" cursor-pointer relative"
+              onClick={() => clickToCopy("email", index)}
+            >
+              {" "}
+              <p>{user.email}</p>
+              <div className=" absolute -top-2 p-2 rounded-xl text-white w-full">
+                {copiedEmail[index] && (
+                  <div className=" p-2 rounded-xl bg-black/80 w-full">
+                    <p className=" text-white font-medium">Copied!!</p>
+                  </div>
+                )}
+              </div>
+            </td>
+            <td
+              align="center"
+              className=" cursor-pointer relative"
+              onClick={() => clickToCopy("id", index)}
+            >
+              <p>{user._id}</p>
+              <div className=" absolute -top-2 p-2 rounded-xl text-white w-full">
+                {copiedId[index] && (
+                  <div className=" p-2 rounded-xl bg-black/80 w-full">
+                    <p className=" text-white font-medium">Copied!!</p>
+                  </div>
+                )}
+              </div>
+            </td>
             <td align="center">{user.role}</td>
             <td
               align="center"

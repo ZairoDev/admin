@@ -32,22 +32,22 @@ const PageLogin = ({}) => {
         email,
         password,
       });
-      console.log(response);
       if (response?.data?.message === "Verification OTP sent") {
-        console.log("here");
-        router.push(`/verify-otp/${email}`);
+        toast.success("OTP sent successfully. Please check your email");
+        setTimeout(() => {
+          router.push(`/verify-otp/${email}`);
+        }, 1000);
         return;
       }
 
       if (response.status === 200) {
-        console.log("here");
         toast.success("Login successful");
         Cookies.set("token", response.data.token, { expires: 1 });
         router.push("/");
       }
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.data?.error) {
-        console.log('error', err.response.data);
+        console.log("error", err.response.data);
         toast.error(err.response.data.error);
       } else {
         console.error(err);
@@ -103,7 +103,6 @@ const PageLogin = ({}) => {
                   required
                 />
                 <span className="absolute inset-y-0 right-3 top-11 cursor-pointer text-xl text-neutral-800 dark:text-neutral-200 flex itecen">
-                  
                   {showPassword ? (
                     <AiFillEyeInvisible
                       onClick={() => setShowPassword(!showPassword)}
@@ -129,7 +128,10 @@ const PageLogin = ({}) => {
             </form>
             <span className="block text-center text-neutral-700 dark:text-neutral-300">
               New user?{" "}
-              <Link href="/authentication/signup" className="font-semibold underline">
+              <Link
+                href="/authentication/signup"
+                className="font-semibold underline"
+              >
                 Create an account
               </Link>
             </span>

@@ -26,9 +26,6 @@ export async function POST(request) {
     }
 
     if (savedUser[0].otpToken != otp) {
-      console.log(savedUser[0].otpToken, typeof savedUser[0].otpToken);
-      console.log(otp, typeof otp);
-      console.log("invalid otp");
       return NextResponse.json({ error: "Invalid OTP" }, { status: 400 });
     }
 
@@ -42,6 +39,7 @@ export async function POST(request) {
       id: savedUser[0]._id,
       name: savedUser[0].name,
       email: savedUser[0].email,
+      role: savedUser[0].role,
     };
 
     // Create token
