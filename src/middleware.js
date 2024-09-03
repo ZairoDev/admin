@@ -8,7 +8,6 @@ export function middleware(request) {
   // Define public paths that don't require authentication
   const isPublicPath =
     path === "/authentication/login/" ||
-    path === "/authentication/signup/" ||
     path === "/verify-otp/" ||
     otpPath;
 
@@ -37,7 +36,6 @@ export const config = {
     // "/((?!_next/static|favicon.ico).*)", // Matches all paths except for static files and favicon
     "/",
     "/authentication/login",
-    "/authentication/signup",
     "/users",
     "/allproperties",
     "/property/:path*",
