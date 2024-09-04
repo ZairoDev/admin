@@ -9,7 +9,6 @@ import CheckAnimation from "@/components/ChelAnimation/CheckAnimation";
 
 const Step10 = ({ nextStep, prevStep, id }) => {
   const router = useRouter();
-  console.log("params page 10 : ", id);
 
   const [email, setEmail] = useState("");
 
@@ -42,6 +41,7 @@ const Step10 = ({ nextStep, prevStep, id }) => {
         }
       } catch (error) {
         console.log(error);
+        console.log('error in Fetching User');
       }
     };
     fetchuser();
@@ -124,9 +124,43 @@ const Step10 = ({ nextStep, prevStep, id }) => {
 
   const [propertyId, setPropertyId] = useState();
   const [propertyVSID, setPropertyVSID] = useState("");
+  const [isModal, setIsModal] = useState(false);
+  const [plan, setPlan] = useState("12 months");
+  const [hostedOn, setHostedOn] = useState(["VacationSaga"]);
+  const [checked, setChecked] = useState(true);
+
+
+  const handleSelectCheckbox = (e) => {
+    const fieldName = e.target.name;
+
+    if (hostedOn.includes(fieldName)) {
+      const index = hostedOn.indexOf(fieldName);
+      const newArray = [...hostedOn];
+
+      newArray.splice(index, 1);
+
+      setHostedOn(newArray);
+
+      if (newArray.length >= 1) {
+        setChecked(true);
+      } else {
+        setChecked(false);
+      }
+    } else {
+      const newArray = [...hostedOn];
+      newArray.push(fieldName);
+
+      setHostedOn(newArray);
+
+      if (newArray.length >= 1) {
+        setChecked(true);
+      } else {
+        setChecked(false);
+      }
+    }
+  };
 
   const handleGoLive = async () => {
-    console.log(combinedData.center);
     const data = {
       userId: id[0],
       email: email,
@@ -182,6 +216,9 @@ const Step10 = ({ nextStep, prevStep, id }) => {
       monthlyDiscount: combinedData.monthlyDiscount,
       longTermMonths: combinedData.longTermMonths,
 
+      plan: plan,
+      hostedOn: hostedOn,
+
       isLive: true,
     };
 
@@ -189,18 +226,87 @@ const Step10 = ({ nextStep, prevStep, id }) => {
       const response = await axios.post("/api/addproperty", data);
 
       if (response.data.VSID) {
+        setIsModal(false);
         setPropertyLive(true);
       } else {
         alert("Property live failed");
       }
       clearLocalStorage();
       setPropertyId(response.data._id);
-      // console.log("Response", response.data.VSID);
       setPropertyVSID(response.data.VSID);
     } catch (error) {
       alert.error("User must be logged in to go live");
       throw error;
     }
+  };
+
+  const pricingModal = () => {
+    return (
+      <>
+        <div className=" fixed top-0 right-0 bottom-0 left-0 bg-black/80 bg-opacity-50 z-50">
+          <div className=" fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-slate-800 rounded-xl dark:bg-slate-900">
+            <div className="flex flex-wrap max-w-lg p-2">
+              <h2 className=" w-full text-xl font-medium underline p-2">
+                Select Plan
+              </h2>
+              {["12 months", "18 months", "24 months"].map((field) => (
+                <div className=" flex gap-4 p-2 w-1/3" key={field}>
+                  <label
+                    htmlFor={field}
+                    id={field}
+                    className=" w-4/5"
+                  >
+                    {field}
+                  </label>
+                  <div className=" w-1/5">
+                    {" "}
+                    <input
+                      type="radio"
+                      id={field}
+                      value={plan}
+                      name="plan"
+                      onChange={(e) => setPlan(e.target.id)}
+                      defaultChecked={field === "12 months"}
+                      className=" cursor-pointer w-4 h-4 border border-neutral-700"
+                    />
+                  </div>
+                </div>
+              ))}
+              <h2 className=" w-full text-xl font-medium underline p-2">
+                Select Websites to host on
+              </h2>
+              {["VacationSaga", "HolidaySera"].map((website, index) => (
+                <div className=" flex gap-2 p-2 w-1/3" key={index}>
+                  <label htmlFor={website} className=" w-4/5">
+                    {website}
+                  </label>
+                  <div className=" w-1/5">
+                    <input
+                      type="checkbox"
+                      name={website}
+                      onChange={(e) => handleSelectCheckbox(e)}
+                      defaultChecked={website === "VacationSaga"}
+                      className=" cursor-pointer w-4 h-4 border border-neutral-700"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className=" flex justify-between items-center">
+              <button onClick={handleGoLive} disabled={!checked} className=" disabled:opacity-50 disabled:cursor-not-allowed bg-PrimaryColor p-2 rounded-xl w-1/3 my-4 mx-auto text-white dark:text-white hover:font-medium hover:bg-TextColor">
+                Submit
+              </button>
+              <button
+                onClick={() => setIsModal(false)}
+                className=" bg-PrimaryColor p-2 rounded-xl w-1/3 my-4 mx-auto text-white dark:text-white hover:font-medium hover:bg-TextColor"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </>
+    );
   };
 
   return (
@@ -274,7 +380,7 @@ const Step10 = ({ nextStep, prevStep, id }) => {
             <div>
               <button
                 className=" flex gap-x-2 items-center rounded-2xl bg-PrimaryColor text-white dark:text-white  px-4 py-2"
-                onClick={handleGoLive}
+                onClick={() => setIsModal(true)}
                 disabled={!email}
               >
                 Go Live
@@ -292,6 +398,7 @@ const Step10 = ({ nextStep, prevStep, id }) => {
           Back
         </button>
       </div>
+      {isModal && pricingModal()}
     </>
   );
 };

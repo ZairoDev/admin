@@ -55,6 +55,9 @@ export async function POST(request) {
         monthlyDiscountLongTerm,
         longTermMonths,
 
+        plan,
+        hostedOn,
+
 		isLive,
     } = await request.json();
 
@@ -106,6 +109,9 @@ export async function POST(request) {
         longTermMonths,
 
         hostedFrom: host,
+
+        plan,
+        hostedOn,
         
 		isLive,
     });

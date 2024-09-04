@@ -100,6 +100,15 @@ const PropertySchema = new mongoose.Schema(
       default: [[]]
     },
 
+    plan: {
+      type: String,
+      required: true,
+    },
+    hostedOn:{
+      type: [String],
+      default: [],
+    },
+
     isLive: {
       type: Boolean,
       default: true,

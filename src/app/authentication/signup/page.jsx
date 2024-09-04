@@ -310,6 +310,7 @@ const PageSignUp = () => {
                 >
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
+                  <option value="Other">Others</option>
                 </select>
               </label>
 
