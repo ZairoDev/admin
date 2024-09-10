@@ -1,13 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import NcInputNumber from "../NcInputNumber";
+import { getFromLocalStorage } from "@/helper/localStorage";
 
 const Step3 = ({ nextStep, prevStep }) => {
 
   let portions = 0;
-  const data = localStorage.getItem("page1") || "";
+  const data = getFromLocalStorage("page1");
   if (data) {
-    const value = JSON.parse(data)["numberOfPortions"];
+    const value = data["numberOfPortions"];
     if (value) {
       portions = parseInt(value, 10);
     }
@@ -23,74 +24,74 @@ const Step3 = ({ nextStep, prevStep }) => {
 
   const [myArray, setMyArray] = useState([]);
   const [portionName, setPortionName] = useState(() => {
-    const savedPage = localStorage.getItem("page3") || "";
+    const savedPage = getFromLocalStorage("page3");
     if (!savedPage) {
       return emptyStringArrayGenerator(portions);
     }
-    const value = JSON.parse(savedPage)["portionName"];
+    const value = savedPage["portionName"];
     return value || emptyStringArrayGenerator(portions);
   });
 
   const [portionSize, setPortionSize] = useState(() => {
-    const savedPage = localStorage.getItem("page3") || "";
+    const savedPage = getFromLocalStorage("page3");
     if (!savedPage) {
       return emptyNumberArrayGenerator(portions);
     }
-    const value = JSON.parse(savedPage)["portionSize"];
+    const value = savedPage["portionSize"];
     return value || emptyNumberArrayGenerator(portions);
   });
 
   const [guests, setGuests] = useState(() => {
-    const savedPage = localStorage.getItem("page3") || "";
+    const savedPage = getFromLocalStorage("page3");
     if (!savedPage) {
       return emptyNumberArrayGenerator(portions);
     }
-    const value = JSON.parse(savedPage)["guests"];
+    const value = savedPage["guests"];
     return value || emptyNumberArrayGenerator(portions);
   });
 
   const [bedrooms, setBedrooms] = useState(() => {
-    const savedPage = localStorage.getItem("page3") || "";
+    const savedPage = getFromLocalStorage("page3");
     if (!savedPage) {
       return emptyNumberArrayGenerator(portions);
     }
-    const value = JSON.parse(savedPage)["bedrooms"];
+    const value = savedPage["bedrooms"];
     return value || emptyNumberArrayGenerator(portions);
   });
 
   const [beds, setBeds] = useState(() => {
-    const savedPage = localStorage.getItem("page3") || "";
+    const savedPage = getFromLocalStorage("page3");
     if (!savedPage) {
       return emptyNumberArrayGenerator(portions);
     }
-    const value = JSON.parse(savedPage)["beds"];
+    const value = savedPage["beds"];
     return value || emptyNumberArrayGenerator(portions);
   });
 
   const [bathroom, setBathroom] = useState(() => {
-    const savedPage = localStorage.getItem("page3") || "";
+    const savedPage = getFromLocalStorage("page3");
     if (!savedPage) {
       return emptyNumberArrayGenerator(portions);
     }
-    const value = JSON.parse(savedPage)["bathroom"];
+    const value = savedPage["bathroom"];
     return value || emptyNumberArrayGenerator(portions);
   });
 
   const [kitchen, setKitchen] = useState(() => {
-    const savedPage = localStorage.getItem("page3") || "";
+    const savedPage = getFromLocalStorage("page3");
     if (!savedPage) {
       return emptyNumberArrayGenerator(portions);
     }
-    const value = JSON.parse(savedPage)["kitchen"];
+    const value = savedPage["kitchen"];
     return value || emptyNumberArrayGenerator(portions);
   });
 
   const [childrenAge, setChildrenAge] = useState(() => {
-    const savedPage = localStorage.getItem("page3") || "";
+    const savedPage = getFromLocalStorage("page3");
     if (!savedPage) {
       return emptyNumberArrayGenerator(portions);
     }
-    const value = JSON.parse(savedPage)["childrenAge"];
+    const value = savedPage["childrenAge"];
     return value || emptyNumberArrayGenerator(portions);
   });
 

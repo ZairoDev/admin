@@ -2,59 +2,60 @@
 import React, { FC, useEffect } from "react";
 import { useState } from "react";
 import FormItem from "../FormItem";
+import { getFromLocalStorage, updateLocalStorage } from "@/helper/localStorage";
 
 const PageAddListing1 = ({nextStep, prevStep}) => {
   const [propertyType, setPropertyType] = useState(() => {
-    const savedPage = localStorage.getItem("page1") || "";
+    const savedPage = getFromLocalStorage("page1");
     if (!savedPage) {
       return "Hotel";
     }
-    const value = JSON.parse(savedPage)["propertyType"];
+    const value = savedPage["propertyType"];
     return value || "Hotel";
   });
 
   const [placeName, setPlaceName] = useState(() => {
-    const savedPage = localStorage.getItem("page1") || "";
+    const savedPage = getFromLocalStorage("page1");
     if (!savedPage) {
       return "";
     }
-    const value = JSON.parse(savedPage)["placeName"];
+    const value = savedPage["placeName"];
     return value || "";
   });
 
   const [rentalForm, setRentalForm] = useState(() => {
-    const savedPage = localStorage.getItem("page1") || "";
+    const savedPage = getFromLocalStorage("page1");
     if (!savedPage) {
       return "Private Room";
     }
-    const value = JSON.parse(savedPage)["rentalForm"];
+    const value = savedPage["rentalForm"];
     return value || "Private Room";
   });
 
   const [numberOfPortions, setNumberOfPortions] = useState(() => {
-    const savedPage = localStorage.getItem("page1") || "";
+    const savedPage = getFromLocalStorage("page1");
     if (!savedPage) {
       return 1;
     }
-    const value = JSON.parse(savedPage)["numberOfPortions"];
+    const value = savedPage["numberOfPortions"];
     return value ? parseInt(value, 10) : 1;
   });
 
   const [showPortionsInput, setShowPortionsInput] = useState(() => {
-    const savedPage = localStorage.getItem("page1") || "";
+    const savedPage = getFromLocalStorage("page1");
     if (!savedPage) {
       return false;
     }
-    const value = JSON.parse(savedPage)["showPortionsInput"];
+    const value = savedPage["showPortionsInput"];
     return value ? JSON.parse(value) : false;
   });
 
   const [rentalType, setRentalType] = useState(() => {
-    const savedRentalType = localStorage.getItem("page1") || "";
+    const savedRentalType = getFromLocalStorage("page1");
     if (!savedRentalType) {
       return "Short Term";
     }
-    const value = JSON.parse(savedRentalType)["rentalType"];
+    const value = savedRentalType["rentalType"];
     return value || "Short Term";
   });
 
