@@ -11,11 +11,11 @@ const CustomDayPicker = dynamic(() => import("../CustomdayPicker"), {
 
 const Step9 = ({ nextStep, prevStep }) => {
   const [portions, setPortions] = useState(() => {
-    const savedPage = localStorage.getItem("page3") || "";
+    const savedPage = localStorage.getItem("page1") || "";
     if (!savedPage) {
       return 0;
     }
-    const savedPortions = JSON.parse(savedPage)["portions"].length;
+    const savedPortions = JSON.parse(savedPage)["numberOfPortions"].length;
     return savedPortions || 0;
   });
 

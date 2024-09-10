@@ -5,10 +5,12 @@ import Users from "@/models/user";
 connectDb();
 
 export async function GET(request) {
+    console.log(request)
 
     const currentPage = request.nextUrl.searchParams.get('currentPage');
     const queryType = request.nextUrl.searchParams.get('queryType');
     const userInput = request.nextUrl.searchParams.get('userInput');
+    console.log(queryType);
 
     const query = {};
     if (userInput){

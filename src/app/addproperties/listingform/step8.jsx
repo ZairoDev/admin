@@ -23,10 +23,10 @@ export const MONTHS = [
 const Step8 = ({ nextStep, prevStep }) => {
   const [basePriceError, setBasePriceError] = useState(false);
   let portions = 0;
-  const data = localStorage.getItem("page3") || "";
+  const data = localStorage.getItem("page1") || "";
   if (data) {
     const temp = JSON.parse(data);
-    const value = temp["portions"].length;
+    const value = temp["numberOfPortions"];
     if (value) {
       portions = parseInt(value, 10);
     }

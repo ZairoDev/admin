@@ -4,13 +4,13 @@ import { MdCancel } from "react-icons/md";
 
 const Step7 = ({ nextStep, prevStep }) => {
   let portions = 0;
-  const data = localStorage.getItem("page3") || "";
+  const data = localStorage.getItem("page1") || "";
   if (!data) {
     portions = 1;
   }
   if (data) {
     const temp = JSON.parse(data);
-    const value = temp["portions"].length;
+    const value = temp["numberOfPortions"];
     if (value) {
       portions = parseInt(value, 10);
     }
