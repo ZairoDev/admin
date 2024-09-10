@@ -23,10 +23,10 @@ export const MONTHS = [
 const Step8 = ({ nextStep, prevStep }) => {
   const [basePriceError, setBasePriceError] = useState(false);
   let portions = 0;
-  const data = localStorage.getItem("page3") || "";
+  const data = localStorage.getItem("page1") || "";
   if (data) {
     const temp = JSON.parse(data);
-    const value = temp["portions"].length;
+    const value = temp["numberOfPortions"];
     if (value) {
       portions = parseInt(value, 10);
     }
@@ -188,6 +188,8 @@ const Step8 = ({ nextStep, prevStep }) => {
     nextStep();
   };
 
+  console.log("rentalType: ", rentalType);
+
   return (
     <>
       <h1>Step 8</h1>
@@ -338,16 +340,16 @@ const Step8 = ({ nextStep, prevStep }) => {
             </div>
           )}
 
-        {rentalType && rentalType === "Long Term" && (
+        {rentalType && (rentalType == "Long Term" || rentalType == "Both") && (
           <div>
             <h1 className="text-3xl font-semibold">Long Term Pricing</h1>
-            <h2 className="flex flex-wrap gap-2">
-              (
-              {MONTHS.filter((m) => longTermMonths.includes(m)).map(
+            <h2 className=" flex gap-2">
+              ({" "}
+              {MONTHS.filter((m, i) => longTermMonths.includes(m)).map(
                 (month, index) => (
-                  <h2 key={index}> {month}, </h2>
+                  <h2 key={index}>{month}, </h2>
                 )
-              )}
+              )}{" "}
               )
             </h2>
             {myArray.map((item, index) => (
@@ -357,36 +359,55 @@ const Step8 = ({ nextStep, prevStep }) => {
                     Price for {isPortion ? `Portion ${index + 1}` : "Property"}
                   </h2>
                   <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
-                    {`The host's revenue is directly dependent on the setting of rates and
-                    regulations on the number of guests, the number of nights, and the
-                    cancellation policy.`}
+                    {` The host's revenue is directly dependent on the setting of rates and
+                                        regulations on the number of guests, the number of nights, and the
+                                        cancellation policy.`}
                   </span>
                 </div>
                 <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
+                {/* FORM */}
                 <div className="space-y-8">
+                  {/* ITEM */}
                   <FormItem label="Currency">
                     <select className="block w-60 outline-none  border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border">
                       <option value="EURRO">EURO</option>
                     </select>
                   </FormItem>
-                  <FormItem label="Base price (Long term)">
+                  <FormItem label="Monthly Price">
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <span className="text-gray-500">€</span>
                       </div>
                       <Input
                         className="!pl-8 !pr-10"
-                        placeholder="0.00"
+                        placeholder="Price in Euro"
                         value={basePriceLongTerm[index]}
                         onChange={(e) =>
-                          setBasePriceLongTerm((prevBasePriceLongTerm) => {
-                            const newBasePriceLongTerm = [
-                              ...prevBasePriceLongTerm,
-                            ];
-                            newBasePriceLongTerm[index] = parseFloat(
-                              e.target.value
-                            );
-                            return newBasePriceLongTerm;
+                          setBasePriceLongTerm((prev) => {
+                            const newBasePriceLongTermArray = [...prev];
+                            newBasePriceLongTermArray[index] =
+                              parseInt(e.target.value) || 0;
+                            return newBasePriceLongTermArray;
+                          })
+                        }
+                      />
+                    </div>
+                  </FormItem>
+                  <FormItem label="Monthly Discounts">
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span className="text-gray-500">%</span>
+                      </div>
+                      <Input
+                        className="!pl-8 !pr-10"
+                        placeholder={""}
+                        value={monthlyDiscount[index]}
+                        onChange={(e) =>
+                          setMonthlyDiscount((prev) => {
+                            const newMonthlyArray = [...prev];
+                            newMonthlyArray[index] =
+                              parseInt(e.target.value) || 0;
+                            return newMonthlyArray;
                           })
                         }
                       />

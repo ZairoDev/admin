@@ -28,6 +28,13 @@ export async function POST(request) {
     // Check if user is verified
     const temp = user[0];
 
+    if (!(temp.role === "Admin" || temp.role === "SuperAdmin")) {
+      return NextResponse.json(
+        { error: "Only Admins can login" },
+        { status: 400 }
+      );
+    }
+
     if (!temp.isVerified) {
       console.log(user.isVerified);
       return NextResponse.json(
@@ -46,7 +53,7 @@ export async function POST(request) {
       );
     }
 
-    if (temp.role === "Admin") {
+    if (temp.role === "SuperAdmin") {
       const response = await sendEmail({
         email,
         emailType: "OTP",
@@ -60,10 +67,12 @@ export async function POST(request) {
     }
 
     // Create token data
+
     const tokenData = {
       id: temp._id,
       name: temp.name,
       email: temp.email,
+      role: temp.role,
     };
 
     // Create token

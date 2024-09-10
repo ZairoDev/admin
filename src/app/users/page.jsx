@@ -32,12 +32,16 @@ const page = () => {
 
   const fetchAllUsers = async () => {
     // const response = await axios.get(`/api/users?limit=${20}&skip=${(currentPage - 1) * 20}&currentPage=${currentPage}`);
-    const response = await axios.get(
-      `/api/users/getAllUsers?currentPage=${currentPage}&queryType=${queryType}&userInput=${userInput}`
-    );
-    const allUsers = response.data.allUsers;
-    const totalUsers = response.data.totalUsers;
-    return { allUsers, totalUsers };
+    try {
+      const response = await axios.get(
+        `/api/users/getAllUsers?currentPage=${currentPage}&queryType=${queryType}&userInput=${userInput}`
+      );
+      const allUsers = response.data.allUsers;
+      const totalUsers = response.data.totalUsers;
+      return { allUsers, totalUsers };
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   // const { data, error, isPending, isSuccess } = useUsers({ currentPage });

@@ -13,10 +13,10 @@ const page = ({ params }) => {
   const [otpInput, setOtpInput] = useState("");
   const email = params.email;
   console.log(email);
-  const [remainingTime, setRemainingTime] = useState(0);
+  const [remainingTime, setRemainingTime] = useState(60);
   const [verifyLoading, setVerifyLoading] = useState(false);
   const [disabledButton, setDisabledButton] = useState(true);
-  const [verifyClick, setVerifyClick] = useState(false);
+  const [verifyClick, setVerifyClick] = useState(true);
 
   useEffect(() => {
     if (remainingTime > 0) {
@@ -34,7 +34,6 @@ const page = ({ params }) => {
   }, [remainingTime]);
 
   const handleOTPverification = async () => {
-    setRemainingTime(60);
     setVerifyLoading(true);
     if (otpInput.length !== 6) {
       setVerifyLoading(false);
@@ -46,8 +45,6 @@ const page = ({ params }) => {
         otp: otpInput,
         email,
       });
-      console.log(response);
-      console.log(response.data);
       toast.success("Login successful");
       router.push("/");
     } catch (err) {
@@ -98,7 +95,7 @@ const page = ({ params }) => {
         </p>
       )}
       <button
-        disabled={verifyLoading || disabledButton}
+        disabled={verifyLoading}
         onClick={handleOTPverification}
         className=" mt-4 px-4 py-2 rounded-3xl bg-PrimaryColor dark:text-white text-white"
       >

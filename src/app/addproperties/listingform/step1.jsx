@@ -1,220 +1,306 @@
 "use client";
-import { useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
-import Input from "@/components/Input/Input";
-import {
-  getFromLocalStorage,
-  updateLocalStorage,
-} from "../../../helper/localStorage";
+import React, { FC, useEffect } from "react";
+import { useState } from "react";
+import FormItem from "../FormItem";
 
-const Step1 = ({ nextStep }) => {
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      category: "",
-      propertyType: "",
-      placeName: "",
-      rentalType: "",
-    },
+const PageAddListing1 = ({nextStep, prevStep}) => {
+  const [propertyType, setPropertyType] = useState(() => {
+    const savedPage = localStorage.getItem("page1") || "";
+    if (!savedPage) {
+      return "Hotel";
+    }
+    const value = JSON.parse(savedPage)["propertyType"];
+    return value || "Hotel";
   });
 
-  const rentalTypes = [
-    "Private Area",
-    "Private Area By Portion",
-    "Shared Room",
-    "Hotel Room",
-  ];
-  const propertyTypes = [
-    "Hotel",
-    "Cottage",
-    "Villa",
-    "Cabin",
-    "Farm stay",
-    "Houseboat",
-    "Lighthouse",
-    "Studio",
-    "Apartment",
-    "Penthouse",
-    "Detached House",
-    "Loft",
-    "Maisonette",
-    "Farmhouse",
-    "Holiday Homes",
-    "Farmstay",
-    "Resort",
-    "Lodge",
-    "Apart Hotel",
-  ];
+  const [placeName, setPlaceName] = useState(() => {
+    const savedPage = localStorage.getItem("page1") || "";
+    if (!savedPage) {
+      return "";
+    }
+    const value = JSON.parse(savedPage)["placeName"];
+    return value || "";
+  });
+
+  const [rentalForm, setRentalForm] = useState(() => {
+    const savedPage = localStorage.getItem("page1") || "";
+    if (!savedPage) {
+      return "Private Room";
+    }
+    const value = JSON.parse(savedPage)["rentalForm"];
+    return value || "Private Room";
+  });
+
+  const [numberOfPortions, setNumberOfPortions] = useState(() => {
+    const savedPage = localStorage.getItem("page1") || "";
+    if (!savedPage) {
+      return 1;
+    }
+    const value = JSON.parse(savedPage)["numberOfPortions"];
+    return value ? parseInt(value, 10) : 1;
+  });
+
+  const [showPortionsInput, setShowPortionsInput] = useState(() => {
+    const savedPage = localStorage.getItem("page1") || "";
+    if (!savedPage) {
+      return false;
+    }
+    const value = JSON.parse(savedPage)["showPortionsInput"];
+    return value ? JSON.parse(value) : false;
+  });
+
+  const [rentalType, setRentalType] = useState(() => {
+    const savedRentalType = localStorage.getItem("page1") || "";
+    if (!savedRentalType) {
+      return "Short Term";
+    }
+    const value = JSON.parse(savedRentalType)["rentalType"];
+    return value || "Short Term";
+  });
+
+  const [page1, setPage1] = useState({
+    propertyType: propertyType,
+    placeName: placeName,
+    rentalForm: rentalForm,
+    numberOfPortions: numberOfPortions,
+    showPortionsInput: showPortionsInput,
+    rentalType: rentalType,
+  });
+
+  const handlePropertyTypeChange = (e) => {
+    const selectedPropertyType = e.target.value;
+    console.log("selected Property Type: ", selectedPropertyType);
+    setPropertyType(selectedPropertyType);
+  };
+
+  const handlePlaceName = (e) => {
+    const pName = e.target.value.trim();
+    setPlaceName(pName);
+  };
+
+  const handleRentalFormChange = (e) => {
+    const selectedValue = e.target.value;
+    const value = 1;
+    if (selectedValue === "Private room") {
+      setNumberOfPortions(value);
+    }
+    // Example logic to handle when to show portions input
+    if (selectedValue === "Private room by portion") {
+      setNumberOfPortions(2);
+      setShowPortionsInput(true);
+    } else {
+      setNumberOfPortions(1);
+      setShowPortionsInput(false);
+    }
+    setRentalForm(e.target.value);
+  };
+
+  const handleRentalTypeChange = (e) => {
+    console.log(e.target.id);
+    setRentalType(e.target.id);
+  };
+
+  const handlePortionsInputChange = (e) => {
+    const value = parseInt(e.target.value, 10); // Ensure input value is parsed to an integer
+    setNumberOfPortions(value);
+  };
 
   useEffect(() => {
-    const storedData = getFromLocalStorage("page1");
-    if (storedData) {
-      Object.entries(storedData).forEach(([key, value]) => {
-        setValue(key, value);
-      });
-    }
-  }, [setValue]);
-
-  const onSubmit = (data) => {
-    Object.entries(data).forEach(([key, value]) => {
-      updateLocalStorage("page1", key, value);
+    // localStorage.setItem("numberOfPartition", numberOfPortions.toString());
+    setPage1((prev) => {
+      const newObj = { ...prev };
+      newObj.numberOfPortions = numberOfPortions;
+      return newObj;
     });
+  }, [numberOfPortions]);
+
+  useEffect(() => {
+    setPage1((prev) => {
+      const newObj = { ...prev };
+      newObj.propertyType = propertyType;
+      return newObj;
+    });
+    // localStorage.setItem("propertyType", propertyType);
+  }, [propertyType]);
+
+  useEffect(() => {
+    // localStorage.setItem("placeName", placeName);
+    setPage1((prev) => {
+      const newObj = { ...prev };
+      newObj.placeName = placeName;
+      return newObj;
+    });
+  }, [placeName]);
+
+  useEffect(() => {
+    // localStorage.setItem("rentalForm", rentalForm);
+    setPage1((prev) => {
+      const newObj = { ...prev };
+      newObj.rentalForm = rentalForm;
+      return newObj;
+    });
+  }, [rentalForm]);
+
+  useEffect(() => {
+    setPage1((prev) => {
+      const newObj = { ...prev };
+      newObj.rentalType = rentalType;
+      return newObj;
+    });
+  }, [rentalType]);
+
+  useEffect(() => {
+    const newPage1 = {
+      propertyType: propertyType,
+      placeName: placeName,
+      rentalForm: rentalForm,
+      numberOfPortions: numberOfPortions,
+      showPortionsInput: showPortionsInput,
+      rentalType: rentalType,
+    };
+    setPage1(newPage1);
+    localStorage.setItem("page1", JSON.stringify(newPage1));
+  }, [
+    propertyType,
+    placeName,
+    rentalForm,
+    numberOfPortions,
+    showPortionsInput,
+    rentalType,
+  ]);
+
+  const handleNext = () => {
     nextStep();
   };
 
   return (
-    <>
-      <h1>Step 1</h1>
-      <div className="mt-6">
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col w-full"
-        >
-          <div className="mb-8">
-            <h1 className="text-2xl ml-1 font-medium mb-2">
-              Choosing listing categories
-            </h1>
-            <div className="flex items-center justify-between gap-x-3">
-              <Controller
-                name="category"
-                control={control}
-                rules={{ required: "Please select a category." }}
-                render={({ field }) => (
-                  <div className="flex items-center justify-between gap-x-10">
-                    {["Short Term", "Long Term", "Both"].map((type) => (
-                      <label
-                        key={type}
-                        className={`block cursor-pointer text-sm border rounded-full px-5 py-2 ${
-                          field.value === type
-                            ? "bg-PrimaryColor text-white dark:text-white"
-                            : "border text-PrimaryColor border-PrimaryColor"
-                        }`}
-                      >
-                        <input
-                          type="radio"
-                          {...field}
-                          value={type}
-                          checked={field.value === type}
-                          className="mr-[2px] hidden invisible cursor-pointer"
-                        />
-                        {type}
-                      </label>
-                    ))}
-                  </div>
-                )}
-              />
-            </div>
-            {errors.category && (
-              <p className="text-red-500 text-xs ml-1 mt-1">
-                {errors.category.message}
-              </p>
-            )}
-          </div>
-
+    <div>
+      <h2 className="text-2xl font-semibold">Choosing listing categories</h2>
+      <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
+      {/* FORM */}
+      <div className="space-y-8">
+        {/* ITEM */}
+        <div className=" mt-4 flex justify-between">
           <div>
-            <label htmlFor="propertyType" className="ml-1">
-              Choose a property type
+            <label htmlFor="Short Term" id="Short Term">
+              Short Term
             </label>
-            <Controller
-              name="propertyType"
-              control={control}
-              rules={{ required: "Please select a property type." }}
-              render={({ field }) => (
-                <select
-                  {...field}
-                  className="block w-full cursor-pointer outline-none border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
-                >
-                  <option value="">Select a property type</option>
-                  {propertyTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-              )}
-            />
-            {errors.propertyType && (
-              <p className="text-red-500 text-xs mt-1 ml-1">
-                {errors.propertyType.message}
-              </p>
-            )}
-            <p className="text-xs ml-1">
-              Hotel: Professional hospitality businesses that usually have a
-              unique style or theme defining their brand and decor
-            </p>
-          </div>
-
-          <div className="mt-6">
-            <label htmlFor="placeName" className="ml-1">
-              Place name
-            </label>
-            <Controller
-              name="placeName"
-              control={control}
-              rules={{ required: "Please enter the place name." }}
-              render={({ field }) => (
-                <Input {...field} placeholder="Place name" />
-              )}
-            />
-            {errors.placeName && (
-              <p className="text-red-500 text-xs ml-1 mt-1">
-                {errors.placeName.message}
-              </p>
-            )}
-            <p className="text-xs ml-1">
-              A catchy name usually includes: House name + Room name + Featured
-              property + Tourist destination
-            </p>
-          </div>
-
-          <div className="mt-6">
-            <label htmlFor="rentalType" className="ml-1">
-              Choose a rental type
-            </label>
-            <Controller
+            <input
+              type="radio"
               name="rentalType"
-              control={control}
-              rules={{ required: "Please select a rental type." }}
-              render={({ field }) => (
-                <select
-                  {...field}
-                  className="block w-full outline-none cursor-pointer border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-2xl text-sm font-normal h-11 px-4 py-3 border"
-                >
-                  <option value="">Select a rental type</option>
-                  {rentalTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-              )}
+              className=" mx-2 p-2 cursor-pointer "
+              id="Short Term"
+              defaultChecked={rentalType === "Short Term"}
+              onChange={handleRentalTypeChange}
             />
-            {errors.rentalType && (
-              <p className="text-red-500 text-xs ml-1 mt-1">
-                {errors.rentalType.message}
-              </p>
-            )}
-            <p className="text-xs ml-1">
-              Entire place: Guests have the whole place to themselves—there's a
-              private entrance and no shared spaces.
-              <br /> A bedroom, bathroom, and kitchen are usually included
-            </p>
           </div>
-
+          <div>
+            <label htmlFor="Long Term" id="Long Term">
+              Long Term
+            </label>
+            <input
+              type="radio"
+              name="rentalType"
+              className=" mx-2 p-2 cursor-pointer"
+              id="Long Term"
+              defaultChecked={rentalType === "Long Term"}
+              onChange={handleRentalTypeChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="Both" id="Both">
+              Both
+            </label>
+            <input
+              type="radio"
+              name="rentalType"
+              className=" mx-2 p-2 cursor-pointer"
+              id="Both"
+              defaultChecked={rentalType === "Both"}
+              onChange={handleRentalTypeChange}
+            />
+          </div>
+        </div>
+        <FormItem
+          label="Choose a property type"
+          desc="Hotel: Professional hospitality businesses that usually have a unique style or theme defining their brand and decor"
+        >
+          <select onChange={handlePropertyTypeChange} value={propertyType} className="p-2 rounded-xl cursor-pointer">
+            <option value="Hotel">Hotel</option>
+            <option value="Cottage">Cottage</option>
+            <option value="Villa">Villa</option>
+            <option value="Cabin">Cabin</option>
+            <option value="Farm stay">Farm stay</option>
+            <option value="Houseboat">Houseboat</option>
+            <option value="Lighthouse">Lighthouse</option>
+            <option value="Studio">Studio</option>
+            <option value="Apartment">Apartment</option>
+            <option value="Penthouse">Penthouse</option>
+            <option value="Detached House">Detached House</option>
+            <option value="Loft">Loft</option>
+            <option value="Maisonette">Maisonette</option>
+            <option value="Farmhouse">Farmhouse</option>
+            <option value="Holiday Homes">Holiday Homes</option>
+            <option value="Farmstay">Farmstay</option>
+            <option value="Resort">Resort</option>
+            <option value="Lodge">Lodge</option>
+            <option value="Apart Hotel">Apart Hotel</option>
+          </select>
+        </FormItem>
+        <FormItem
+          label="Place name"
+          desc="A catchy name usually includes: House name + Room name + Featured property + Tourist destination"
+        >
+          <input
+            placeholder="Places name"
+            onChange={handlePlaceName}
+            value={placeName}
+            className="p-2 rounded-xl cursor-pointer"
+          />
+        </FormItem>
+        <FormItem
+          label="Rental form"
+          desc="Entire place: Guests have the whole place to themselves—there's a private entrance and no shared spaces. A bedroom, bathroom, and kitchen are usually included."
+        >
+          <select onChange={handleRentalFormChange} value={rentalForm} className=" p-2 rounded-xl cursor-pointer">
+            {/* <option value="Share room">Share room</option> */}
+            <option value="Private room">Private Area</option>
+            <option value="Private room by portion">
+              Private Area by portion
+            </option>
+            <option value="Shared Room">Shared Room</option>
+            <option value="Hotel Room">Hotel Room </option>
+          </select>
+        </FormItem>
+        {showPortionsInput && (
+            <input
+              className=" mt-4 rounded-lg text-black cursor-pointer text-sm p-2"
+              type="number"
+              value={numberOfPortions}
+              onChange={handlePortionsInputChange}
+              placeholder="Number of portions"
+              min={2}
+              title="Number of portions can not be less than 2"
+            />
+          )}
+      </div>
+      <div className="flex mb-4 items-center gap-x-4">
           <button
-            type="submit"
-            className="max-w-[200px] mb-4 w-full mt-10 text-white dark:text-white bg-PrimaryColor hover:bg-PrimaryColor/90 focus:ring-4 focus:ring-PrimaryColor/50 font-medium rounded-full text-sm px-5 py-2.5 text-center"
+            className="max-w-[200px] w-full mt-10 text-white dark:text-white bg-PrimaryColor hover:bg-PrimaryColor/90 focus:ring-4 focus:ring-PrimaryColor/50 font-medium rounded-full text-sm px-5 py-2.5 text-center"
+            onClick={prevStep}
+          >
+            Back
+          </button>
+          <button
+            onClick={handleNext}
+            className="max-w-[200px] w-full mt-10 text-white dark:text-white bg-PrimaryColor hover:bg-PrimaryColor/90 focus:ring-4 focus:ring-PrimaryColor/50 font-medium rounded-full text-sm px-5 py-2.5 text-center"
           >
             Next
           </button>
-        </form>
-      </div>
-    </>
+        </div>
+    </div>
   );
 };
+export const useClient = true;
 
-export default Step1;
+export default PageAddListing1;

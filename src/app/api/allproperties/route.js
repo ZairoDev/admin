@@ -22,9 +22,9 @@ export async function GET(request) {
     let allProperties;
 
     if (!searchTerm) {
-      allProperties = await Property.find().skip(skip).limit(limit);
+      allProperties = await Property.find().skip(skip).limit(limit).sort({_id: -1});;
     } else {
-      allProperties = await Property.find(query);
+      allProperties = await Property.find(query).sort({_id: -1});;
     }
 
     if (allProperties.length === 0) {
