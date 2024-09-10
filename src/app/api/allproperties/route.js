@@ -2,6 +2,9 @@ import { connectDb } from "../../../helper/db";
 import { NextResponse } from "next/server";
 import { Property } from "@/models/listing";
 
+// Force Next.js to treat this API route as dynamic
+export const dynamic = 'force-dynamic';
+
 connectDb();
 
 export async function GET(request) {
@@ -22,9 +25,9 @@ export async function GET(request) {
     let allProperties;
 
     if (!searchTerm) {
-      allProperties = await Property.find().skip(skip).limit(limit).sort({_id: -1});;
+      allProperties = await Property.find().skip(skip).limit(limit).sort({_id: -1});
     } else {
-      allProperties = await Property.find(query).sort({_id: -1});;
+      allProperties = await Property.find(query).sort({_id: -1});
     }
 
     if (allProperties.length === 0) {
